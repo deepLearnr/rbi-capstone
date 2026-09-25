@@ -8,7 +8,6 @@ router = APIRouter(
 
 
 # Temporary in-memory storage.
-# We'll replace this with PostgreSQL later.
 circulars: list[CircularResponse] = []
 
 
