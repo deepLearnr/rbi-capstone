@@ -1,8 +1,50 @@
+from typing import Literal
+
 from app.core.config import get_settings
 from app.llm.service import get_llm_provider
 from app.rag.prompt import build_rag_prompt
 from app.rag.schemas import RAGAnswer, SourceCitation
 from app.retrieval.service import retrieve_chunks
+
+
+def parse_evidence_response(response: str) -> tuple[
+    Literal["supported", "insufficient"],
+    str,
+]:
+    response = response.strip()
+
+    supported_marker = "EVIDENCE_STATUS: supported"
+    insufficient_marker = "EVIDENCE_STATUS: insufficient"
+
+    if response.startswith(supported_marker):
+        status = "supported"
+    elif response.startswith(insufficient_marker):
+        status = "insufficient"
+    else:
+        # Fail closed if the model does not follow the required format.
+        return (
+            "insufficient",
+            "The available RBI material does not contain enough "
+            "information to answer this question.",
+        )
+
+    answer = response[len(
+        supported_marker
+        if status == "supported"
+        else insufficient_marker
+    ):].strip()
+
+    if answer.startswith("ANSWER:"):
+        answer = answer[len("ANSWER:"):].strip()
+
+    if not answer:
+        return (
+            "insufficient",
+            "The available RBI material does not contain enough "
+            "information to answer this question.",
+        )
+
+    return status, answer
 
 
 def answer_question(
@@ -30,7 +72,7 @@ def answer_question(
                 "information to answer this question."
             ),
             citations=[],
-            grounded=False,
+            evidence_status="insufficient",
         )
 
 
@@ -40,7 +82,9 @@ def answer_question(
     )
 
     provider = get_llm_provider()
-    answer = provider.generate(prompt)
+    raw_response = provider.generate(prompt)
+
+    evidence_status, answer = parse_evidence_response(raw_response)
 
     citations = [
         SourceCitation(
@@ -59,5 +103,5 @@ def answer_question(
     return RAGAnswer(
         answer=answer,
         citations=citations,
-        grounded=True,
+        evidence_status=evidence_status,
     )

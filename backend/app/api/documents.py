@@ -23,6 +23,23 @@ def get_documents(db: Session = Depends(get_db)):
         select(Document).order_by(Document.id)
     ).all()
 
+@router.get(
+    "/{document_id}",
+    response_model=DocumentResponse,
+)
+def get_document(
+    document_id: int,
+    db: Session = Depends(get_db),
+):
+    document = db.get(Document, document_id)
+
+    if document is None:
+        raise HTTPException(
+            status_code=404,
+            detail="Document not found",
+        )
+
+    return document
 
 @router.post("/", response_model=DocumentResponse)
 def create_document(

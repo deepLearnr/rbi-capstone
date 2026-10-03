@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 
@@ -15,4 +17,4 @@ class SourceCitation(BaseModel):
 class RAGAnswer(BaseModel):
     answer: str
     citations: list[SourceCitation] = Field(default_factory=list)
-    grounded: bool = True
+    evidence_status: Literal["supported", "insufficient"] = "supported"
