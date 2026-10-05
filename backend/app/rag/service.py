@@ -1,3 +1,4 @@
+import re
 from typing import Literal
 
 from app.core.config import get_settings
@@ -9,42 +10,74 @@ from app.retrieval.service import retrieve_chunks
 
 def parse_evidence_response(response: str) -> tuple[
     Literal["supported", "insufficient"],
+    list[int],
     str,
 ]:
-    response = response.strip()
+    lines = response.strip().splitlines()
 
-    supported_marker = "EVIDENCE_STATUS: supported"
-    insufficient_marker = "EVIDENCE_STATUS: insufficient"
+    status: Literal["supported", "insufficient"] | None = None
+    evidence_ids: list[int] = []
+    answer_lines: list[str] = []
+    in_answer = False
 
-    if response.startswith(supported_marker):
-        status = "supported"
-    elif response.startswith(insufficient_marker):
-        status = "insufficient"
-    else:
-        # Fail closed if the model does not follow the required format.
+    for line in lines:
+        stripped = line.strip()
+
+        if stripped.startswith("EVIDENCE_STATUS:"):
+            raw_status = stripped[len("EVIDENCE_STATUS:"):].strip().lower()
+            if raw_status in ("supported", "insufficient"):
+                status = raw_status
+            continue
+
+        if stripped.startswith("EVIDENCE_IDS:"):
+            raw_ids = stripped[len("EVIDENCE_IDS:"):].strip()
+            if raw_ids:
+                matches = re.findall(r"\b\d+\b", raw_ids)
+                evidence_ids = [int(m) for m in matches]
+            continue
+
+        if stripped.startswith("ANSWER:"):
+            in_answer = True
+            first_line = stripped[len("ANSWER:"):].strip()
+            if first_line:
+                answer_lines.append(first_line)
+            continue
+
+        if in_answer:
+            answer_lines.append(line)
+
+    answer = "\n".join(answer_lines).strip()
+
+    # Fail closed if status is missing or invalid
+    if status is None:
         return (
             "insufficient",
+            [],
             "The available RBI material does not contain enough "
             "information to answer this question.",
         )
-
-    answer = response[len(
-        supported_marker
-        if status == "supported"
-        else insufficient_marker
-    ):].strip()
-
-    if answer.startswith("ANSWER:"):
-        answer = answer[len("ANSWER:"):].strip()
 
     if not answer:
         return (
             "insufficient",
+            [],
             "The available RBI material does not contain enough "
             "information to answer this question.",
         )
 
-    return status, answer
+    if status == "insufficient":
+        return "insufficient", [], answer
+
+    # Supported status MUST have valid supporting evidence IDs
+    if not evidence_ids:
+        return (
+            "insufficient",
+            [],
+            "The available RBI material does not contain enough "
+            "information to answer this question.",
+        )
+
+    return "supported", evidence_ids, answer
 
 
 def answer_question(
@@ -57,7 +90,6 @@ def answer_question(
         raise ValueError("Question cannot be empty")
 
     settings = get_settings()
-
     effective_top_k = top_k or settings.retrieval_top_k
 
     results = retrieve_chunks(
@@ -75,7 +107,6 @@ def answer_question(
             evidence_status="insufficient",
         )
 
-
     prompt = build_rag_prompt(
         question=question,
         results=results,
@@ -84,24 +115,46 @@ def answer_question(
     provider = get_llm_provider()
     raw_response = provider.generate(prompt)
 
-    evidence_status, answer = parse_evidence_response(raw_response)
+    evidence_status, evidence_ids, answer = parse_evidence_response(raw_response)
+
+    if evidence_status == "insufficient":
+        return RAGAnswer(
+            answer=answer,
+            citations=[],
+            evidence_status="insufficient",
+        )
+
+    # Validate returned evidence IDs against retrieved chunks
+    retrieved_by_id = {result.chunk.id: result for result in results}
+    invalid_ids = [eid for eid in evidence_ids if eid not in retrieved_by_id]
+
+    if invalid_ids:
+        # Fail closed if model hallucinated an unretrieved chunk ID
+        return RAGAnswer(
+            answer=(
+                "The available RBI material does not contain enough "
+                "information to answer this question."
+            ),
+            citations=[],
+            evidence_status="insufficient",
+        )
 
     citations = [
         SourceCitation(
-            chunk_id=result.chunk.id,
-            document_title=result.document_title,
-            rbi_reference=result.rbi_reference,
-            source_file=result.source_file,
-            source_url=result.source_url,
-            page_start=result.page_start,
-            page_end=result.page_end,
-            section=result.heading,
+            chunk_id=retrieved_by_id[eid].chunk.id,
+            document_title=retrieved_by_id[eid].document_title,
+            rbi_reference=retrieved_by_id[eid].rbi_reference,
+            source_file=retrieved_by_id[eid].source_file,
+            source_url=retrieved_by_id[eid].source_url,
+            page_start=retrieved_by_id[eid].page_start,
+            page_end=retrieved_by_id[eid].page_end,
+            section=retrieved_by_id[eid].heading,
         )
-        for result in results
+        for eid in evidence_ids
     ]
 
     return RAGAnswer(
         answer=answer,
         citations=citations,
-        evidence_status=evidence_status,
+        evidence_status="supported",
     )

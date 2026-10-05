@@ -4,7 +4,7 @@ from app.retrieval.service import RetrievedChunk
 def build_context(results: list[RetrievedChunk]) -> str:
     sections = []
 
-    for index, result in enumerate(results, start=1):
+    for result in results:
         page_reference = str(result.page_start or "")
 
         if result.page_end and result.page_end != result.page_start:
@@ -15,7 +15,7 @@ def build_context(results: list[RetrievedChunk]) -> str:
         sections.append(
             "\n".join(
                 [
-                    f"[SOURCE {index}]",
+                    f"[EVIDENCE_ID: {result.chunk.id}]",
                     f"Document: {result.document_title}",
                     f"RBI Reference: {result.rbi_reference or 'Not available'}",
                     f"Pages: {page_reference or 'Not available'}",
@@ -27,4 +27,4 @@ def build_context(results: list[RetrievedChunk]) -> str:
             )
         )
 
-    return "\n\n".join(sections)
+    return "\n\n---\n\n".join(sections)
