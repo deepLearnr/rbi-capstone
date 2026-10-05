@@ -1,0 +1,63 @@
+[
+  {
+    "id": "en_kyc_identifier",
+    "language": "en",
+    "question": "What is a KYC Identifier and when can it be used?",
+    "expected_status": "supported",
+    "expected_sections": ["Q14", "Q15", "Q17"],
+    "expected_keywords": [
+      "KYC Identifier",
+      "CKYCR",
+      "Reporting Entity",
+      "KYC"
+    ]
+  },
+  {
+    "id": "hi_kyc_identifier",
+    "language": "hi",
+    "question": "KYC Identifier क्या है और इसका उपयोग कब किया जा सकता है?",
+    "expected_status": "supported",
+    "expected_sections": ["Q14", "Q15", "Q17"],
+    "expected_keywords": [
+      "KYC Identifier",
+      "CKYCR",
+      "KYC"
+    ]
+  },
+  {
+    "id": "mr_kyc_identifier",
+    "language": "mr",
+    "question": "KYC Identifier म्हणजे काय आणि त्याचा वापर कधी करता येतो?",
+    "expected_status": "supported",
+    "expected_sections": ["Q14", "Q15", "Q17"],
+    "expected_keywords": [
+      "KYC Identifier",
+      "CKYCR",
+      "KYC"
+    ]
+  },
+  {
+    "id": "en_unsupported_penalty",
+    "language": "en",
+    "question": "What is the RBI penalty amount for violating KYC requirements?",
+    "expected_status": "insufficient",
+    "expected_sections": [],
+    "expected_keywords": []
+  },
+  {
+    "id": "hi_unsupported_penalty",
+    "language": "hi",
+    "question": "KYC नियमों का उल्लंघन करने पर RBI का जुर्माना कितना है?",
+    "expected_status": "insufficient",
+    "expected_sections": [],
+    "expected_keywords": []
+  },
+  {
+    "id": "mr_unsupported_penalty",
+    "language": "mr",
+    "question": "KYC नियमांचे उल्लंघन केल्यास RBI चा दंड किती आहे?",
+    "expected_status": "insufficient",
+    "expected_sections": [],
+    "expected_keywords": []
+  }
+]
