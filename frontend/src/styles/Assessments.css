@@ -1,0 +1,383 @@
+.assessments-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 35px 50px;
+    box-sizing: border-box;
+}
+
+/* Header */
+
+.assessments-header {
+    margin-bottom: 25px;
+}
+
+.assessments-header h1 {
+    margin: 0 0 8px;
+    color: #572445;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.assessments-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+/* Search */
+
+.assessment-search {
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.assessment-search span {
+    font-size: 16px;
+}
+
+.assessment-search input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #333;
+}
+
+.assessment-search input::placeholder {
+    color: #999;
+}
+
+.search-icon {
+    color: #777;
+}
+
+/* Filters */
+
+.assessment-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+}
+
+.assessment-filters button {
+    border: 1px solid #d7d7d7;
+    background: #fff;
+    color: #555;
+    padding: 9px 17px;
+    border-radius: 20px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.assessment-filters button:hover {
+    border-color: #572445;
+    color: #572445;
+}
+
+.assessment-filters button.active {
+    background: #572445;
+    border-color: #572445;
+    color: #fff;
+}
+
+/* Sections */
+
+.assessment-section h2,
+.recent-results-section h2 {
+    color: #333;
+    font-size: 18px;
+    margin: 0 0 18px;
+}
+
+/* Assessment List */
+
+.assessment-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.assessment-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 25px;
+    transition: 0.2s;
+}
+
+.assessment-card:hover {
+    border-color: #572445;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.assessment-card-top {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+}
+
+.assessment-icon {
+    width: 48px;
+    height: 48px;
+    min-width: 48px;
+    background: #f8f1f5;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.assessment-info {
+    flex: 1;
+}
+
+.assessment-info h3 {
+    margin: 0 0 9px;
+    color: #333;
+    font-size: 17px;
+}
+
+.assessment-info p {
+    margin: 0 0 17px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.assessment-meta {
+    display: flex;
+    gap: 22px;
+    flex-wrap: wrap;
+    color: #555;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.assessment-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #388e3c;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4caf50;
+}
+
+.mandatory-badge {
+    display: inline-block;
+    margin-left: 12px;
+    padding: 4px 9px;
+    background: #fff4e5;
+    color: #a05a00;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* Action */
+
+.assessment-action {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 175px;
+}
+
+.assessment-action button {
+    border: none;
+    background: #572445;
+    color: #fff;
+    border-radius: 7px;
+    padding: 11px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.assessment-action button:hover {
+    background: #71325a;
+}
+
+.assessment-action .view-result-btn {
+    background: #fff;
+    color: #572445;
+    border: 1px solid #572445;
+}
+
+.assessment-action .view-result-btn:hover {
+    background: #f8f1f5;
+}
+
+/* No Results */
+
+.no-assessments {
+    text-align: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 45px 20px;
+}
+
+.no-assessments div {
+    font-size: 32px;
+    margin-bottom: 10px;
+}
+
+.no-assessments h3 {
+    margin: 0 0 6px;
+    color: #333;
+}
+
+.no-assessments p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+}
+
+/* Recent Results */
+
+.recent-results-section {
+    margin-top: 38px;
+}
+
+.results-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.results-table th {
+    background: #f7f7f7;
+    color: #555;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    padding: 14px 18px;
+    border-bottom: 1px solid #ddd;
+}
+
+.results-table td {
+    color: #555;
+    font-size: 13px;
+    padding: 15px 18px;
+    border-bottom: 1px solid #eee;
+}
+
+.results-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.results-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.score-cell {
+    font-weight: 700;
+    color: #333 !important;
+}
+
+.result-status {
+    font-weight: 600;
+}
+
+.result-status.passed {
+    color: #388e3c;
+}
+
+.result-status.failed {
+    color: #d64545;
+}
+
+/* Responsive */
+
+@media (max-width: 800px) {
+    .assessments-page {
+        padding: 25px 20px 40px;
+    }
+
+    .assessment-card-top {
+        flex-wrap: wrap;
+    }
+
+    .assessment-info {
+        min-width: calc(100% - 70px);
+    }
+
+    .assessment-action {
+        width: 100%;
+        justify-content: flex-start;
+        margin-top: 5px;
+    }
+}
+
+@media (max-width: 600px) {
+    .assessments-page {
+        padding: 20px 15px 35px;
+    }
+
+    .assessments-header h1 {
+        font-size: 24px;
+    }
+
+    .assessment-card {
+        padding: 18px;
+    }
+
+    .assessment-card-top {
+        gap: 12px;
+    }
+
+    .assessment-icon {
+        width: 42px;
+        height: 42px;
+        min-width: 42px;
+        font-size: 20px;
+    }
+
+    .assessment-info h3 {
+        font-size: 15px;
+    }
+
+    .assessment-meta {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .assessment-action button {
+        width: 100%;
+    }
+
+    .results-table th,
+    .results-table td {
+        padding: 12px;
+    }
+}

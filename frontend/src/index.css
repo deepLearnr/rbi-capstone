@@ -1,0 +1,106 @@
+/* ===============================
+   GLOBAL THEME VARIABLES
+================================ */
+
+:root {
+    --bg-color: #f5f7fa;
+    --card-color: #ffffff;
+    --text-color: #222222;
+    --secondary-text: #666666;
+    --border-color: #dddddd;
+    --primary-color: #572445;
+    --input-bg: #ffffff;
+}
+
+/* ===============================
+   DARK MODE
+================================ */
+
+html[data-theme="dark"] {
+    --bg-color: #121212;
+    --card-color: #1e1e1e;
+    --text-color: #f5f5f5;
+    --secondary-text: #bdbdbd;
+    --border-color: #3a3a3a;
+    --primary-color: #b9789e;
+    --input-bg: #2a2a2a;
+}
+
+/* ===============================
+   GLOBAL APPLICATION
+================================ */
+
+html,
+body,
+#root {
+    min-height: 100%;
+    margin: 0;
+}
+
+body {
+    background: var(--bg-color);
+    color: var(--text-color);
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+/* ===============================
+   COMMON ELEMENTS
+================================ */
+
+.settings-page {
+    background: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
+}
+
+.settings-container,
+.settings-menu,
+.settings-content {
+    color: var(--text-color);
+}
+
+.settings-menu,
+.settings-content {
+    background: var(--card-color);
+    border-color: var(--border-color);
+}
+
+.settings-content-header p,
+.settings-header p,
+.toggle-option p,
+.security-item p {
+    color: var(--secondary-text);
+}
+
+.settings-menu-item {
+    color: var(--text-color);
+    background: transparent;
+}
+
+.settings-menu-item:hover {
+    background: rgba(128, 128, 128, 0.1);
+}
+
+.settings-menu-item.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.security-item {
+    border-color: var(--border-color);
+}
+
+.security-item button,
+.save-settings-button {
+    background: var(--primary-color);
+    color: white;
+}
+
+input {
+    accent-color: var(--primary-color);
+}

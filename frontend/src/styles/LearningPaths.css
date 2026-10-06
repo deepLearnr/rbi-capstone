@@ -1,0 +1,524 @@
+/* ================================
+   Learning Paths Page
+================================ */
+
+.learning-page {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 35px 50px;
+    box-sizing: border-box;
+}
+
+/* ================================
+   Page Heading
+================================ */
+
+.learning-heading {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+
+.learning-heading-icon {
+    width: 52px;
+    height: 52px;
+    background: #f1e7ee;
+    color: #572445;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 26px;
+}
+
+.learning-heading h1 {
+    margin: 0;
+    color: #572445;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.learning-heading p {
+    margin: 6px 0 0;
+    color: #6f6f6f;
+    font-size: 14px;
+}
+
+/* ================================
+   Search
+================================ */
+
+.learning-search {
+    width: 100%;
+    height: 50px;
+
+    background: #ffffff;
+    border: 1px solid #dddddd;
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 16px;
+    box-sizing: border-box;
+
+    margin-bottom: 20px;
+}
+
+.learning-search-icon {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+.learning-search input {
+    flex: 1;
+    border: none;
+    outline: none;
+
+    font-size: 14px;
+    color: #333333;
+    background: transparent;
+}
+
+.learning-search input::placeholder {
+    color: #999999;
+}
+
+.learning-search-button {
+    font-size: 18px;
+}
+
+/* ================================
+   Category Filter
+================================ */
+
+.learning-category-filter {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+}
+
+.learning-category-btn {
+    border: 1px solid #d8d8d8;
+    background: #ffffff;
+
+    color: #555555;
+
+    padding: 9px 18px;
+    border-radius: 20px;
+
+    font-size: 13px;
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.learning-category-btn:hover {
+    border-color: #572445;
+    color: #572445;
+}
+
+.learning-category-btn.active {
+    background: #572445;
+    border-color: #572445;
+    color: #ffffff;
+}
+
+/* ================================
+   Section Title
+================================ */
+
+.learning-section-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    margin-bottom: 15px;
+}
+
+.learning-section-title span {
+    font-size: 20px;
+}
+
+.learning-section-title h2 {
+    margin: 0;
+
+    font-size: 19px;
+    color: #333333;
+    font-weight: 650;
+}
+
+/* ================================
+   Recommended Card
+================================ */
+
+.recommended-section {
+    margin-bottom: 35px;
+}
+
+.recommended-card {
+    background: #ffffff;
+
+    border: 1px solid #e2e2e2;
+    border-radius: 12px;
+
+    padding: 25px;
+
+    display: flex;
+    gap: 20px;
+
+    box-sizing: border-box;
+}
+
+.recommended-icon {
+    width: 55px;
+    height: 55px;
+
+    flex-shrink: 0;
+
+    background: #f4edf2;
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+}
+
+.recommended-content {
+    flex: 1;
+}
+
+.recommended-content h3 {
+    margin: 0 0 7px;
+
+    color: #572445;
+    font-size: 20px;
+}
+
+.recommended-content p {
+    margin: 0 0 18px;
+
+    color: #666666;
+    font-size: 14px;
+}
+
+/* ================================
+   Recommended Meta
+================================ */
+
+.recommended-meta {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+
+    margin-bottom: 20px;
+
+    font-size: 13px;
+    color: #555555;
+}
+
+.recommended-meta .beginner {
+    color: #388e3c;
+    font-weight: 600;
+}
+
+/* ================================
+   Progress
+================================ */
+
+.progress-area {
+    width: 100%;
+    max-width: 850px;
+}
+
+.progress-label {
+    display: flex;
+    justify-content: space-between;
+
+    font-size: 13px;
+    margin-bottom: 7px;
+
+    color: #555555;
+}
+
+.progress-label strong {
+    color: #572445;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 8px;
+
+    background: #eeeeee;
+    border-radius: 10px;
+
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #572445;
+    border-radius: 10px;
+}
+
+/* ================================
+   Continue Button
+================================ */
+
+.recommended-action {
+    display: flex;
+    justify-content: flex-end;
+
+    margin-top: 20px;
+}
+
+.continue-btn {
+    background: #572445;
+    color: #ffffff;
+
+    border: none;
+    border-radius: 7px;
+
+    padding: 11px 20px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.continue-btn:hover {
+    background: #71325a;
+    transform: translateY(-1px);
+}
+
+/* ================================
+   Learning Grid
+================================ */
+
+.explore-section {
+    margin-top: 10px;
+}
+
+.learning-grid {
+    display: grid;
+
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 18px;
+}
+
+/* ================================
+   Learning Card
+================================ */
+
+.learning-card {
+    background: #ffffff;
+
+    border: 1px solid #e1e1e1;
+    border-radius: 12px;
+
+    padding: 22px;
+
+    min-height: 210px;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+
+    transition: all 0.2s ease;
+}
+
+.learning-card:hover {
+    border-color: #b9a2b0;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.07);
+}
+
+.learning-card-icon {
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f5f0f3;
+
+    border-radius: 10px;
+
+    font-size: 23px;
+
+    margin-bottom: 15px;
+}
+
+.learning-card h3 {
+    margin: 0 0 16px;
+
+    color: #333333;
+
+    font-size: 17px;
+}
+
+/* ================================
+   Card Info
+================================ */
+
+.learning-card-info {
+    display: flex;
+    flex-direction: column;
+
+    gap: 7px;
+
+    color: #666666;
+
+    font-size: 13px;
+
+    margin-bottom: auto;
+}
+
+/* ================================
+   Explore Button
+================================ */
+
+.explore-btn {
+    align-self: flex-start;
+
+    margin-top: 18px;
+
+    background: transparent;
+
+    border: 1px solid #572445;
+
+    color: #572445;
+
+    padding: 8px 16px;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.explore-btn:hover {
+    background: #572445;
+    color: #ffffff;
+}
+
+/* ================================
+   No Results
+================================ */
+
+.learning-no-results {
+    background: #ffffff;
+
+    border: 1px solid #e2e2e2;
+    border-radius: 12px;
+
+    padding: 45px 20px;
+
+    text-align: center;
+
+    color: #777777;
+}
+
+.learning-no-results>div {
+    font-size: 35px;
+    margin-bottom: 10px;
+}
+
+.learning-no-results h3 {
+    margin: 0 0 5px;
+    color: #444444;
+}
+
+.learning-no-results p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* ================================
+   Tablet
+================================ */
+
+@media (max-width: 900px) {
+    .learning-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .learning-page {
+        padding: 25px;
+    }
+}
+
+/* ================================
+   Mobile
+================================ */
+
+@media (max-width: 600px) {
+    .learning-page {
+        padding: 20px 15px 35px;
+    }
+
+    .learning-heading {
+        align-items: flex-start;
+    }
+
+    .learning-heading h1 {
+        font-size: 23px;
+    }
+
+    .learning-heading p {
+        line-height: 1.5;
+    }
+
+    .learning-category-filter {
+        gap: 7px;
+    }
+
+    .learning-category-btn {
+        padding: 8px 13px;
+    }
+
+    .recommended-card {
+        padding: 18px;
+        flex-direction: column;
+    }
+
+    .recommended-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .recommended-action {
+        justify-content: flex-start;
+    }
+
+    .continue-btn {
+        width: 100%;
+    }
+
+    .learning-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .learning-card {
+        min-height: 190px;
+    }
+}

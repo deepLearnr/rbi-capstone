@@ -1,0 +1,409 @@
+/* =========================================
+   REGULATORY DETAILS PAGE
+========================================= */
+
+.regulatory-details-page {
+    width: 100%;
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    padding: 30px 35px 50px;
+}
+
+
+/* =========================================
+   BACK BUTTON
+========================================= */
+
+.back-button {
+    background: transparent;
+
+    color: #572445;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    padding: 5px 0;
+
+    margin-bottom: 22px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.back-button:hover {
+    transform: translateX(-3px);
+
+    color: #7a3760;
+}
+
+
+/* =========================================
+   MAIN CARD
+========================================= */
+
+.details-card {
+    background: #ffffff;
+
+    border: 1px solid #e3e3e3;
+
+    border-radius: 12px;
+
+    padding: 32px 38px;
+
+    box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+
+/* =========================================
+   CATEGORY
+========================================= */
+
+.details-category {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    color: #c62828;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    margin-bottom: 14px;
+}
+
+.category-dot {
+    width: 9px;
+    height: 9px;
+
+    background: #d63939;
+
+    border-radius: 50%;
+}
+
+
+/* =========================================
+   TITLE
+========================================= */
+
+.details-card h1 {
+    margin: 0 0 15px;
+
+    color: #252525;
+
+    font-size: 28px;
+
+    line-height: 1.3;
+}
+
+
+/* =========================================
+   META
+========================================= */
+
+.details-meta {
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    color: #777;
+
+    font-size: 13px;
+}
+
+.details-divider {
+    width: 100%;
+
+    height: 1px;
+
+    background: #e5e5e5;
+
+    margin: 27px 0;
+}
+
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+.details-section {
+    margin-bottom: 28px;
+}
+
+.details-section h2 {
+    margin: 0 0 10px;
+
+    color: #292929;
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+.details-section p {
+    margin: 0;
+
+    color: #666;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    max-width: 850px;
+}
+
+
+/* =========================================
+   KEY POINTS
+========================================= */
+
+.key-points {
+    list-style: none;
+
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 12px;
+}
+
+.key-points li {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    color: #555;
+
+    font-size: 14px;
+}
+
+.key-points li span {
+    width: 22px;
+    height: 22px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #f0f7f2;
+
+    color: #2e8b57;
+
+    border-radius: 50%;
+
+    font-size: 12px;
+
+    font-weight: bold;
+}
+
+
+/* =========================================
+   EFFECTIVE DATE
+========================================= */
+
+.effective-date {
+    display: inline-block;
+
+    padding: 11px 15px;
+
+    background: #f5eef3;
+
+    color: #572445;
+
+    border-radius: 6px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   DOCUMENT
+========================================= */
+
+.document-heading {
+    margin-bottom: 13px !important;
+}
+
+.document-button {
+    padding: 11px 17px;
+
+    background: #ffffff;
+
+    border: 1px solid #572445;
+
+    color: #572445;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.document-button:hover {
+    background: #572445;
+
+    color: #ffffff;
+}
+
+
+/* =========================================
+   MARK AS READ
+========================================= */
+
+.mark-read-container {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 35px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid #e5e5e5;
+}
+
+.mark-read-button {
+    min-width: 160px;
+
+    padding: 11px 20px;
+
+    background: #572445;
+
+    color: #ffffff;
+
+    border-radius: 6px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.mark-read-button:hover {
+    background: #71325a;
+
+    transform: translateY(-1px);
+}
+
+.mark-read-button.read {
+    background: #2e8b57;
+
+    cursor: default;
+}
+
+.mark-read-button:disabled {
+    opacity: 1;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 768px) {
+
+    .regulatory-details-page {
+        padding: 25px 20px 40px;
+    }
+
+    .details-card {
+        padding: 25px;
+    }
+
+    .details-card h1 {
+        font-size: 23px;
+    }
+
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 500px) {
+
+    .regulatory-details-page {
+        padding: 20px 14px 35px;
+    }
+
+    .back-button {
+        font-size: 12px;
+
+        margin-bottom: 15px;
+    }
+
+    .details-card {
+        padding: 20px 17px;
+
+        border-radius: 9px;
+    }
+
+    .details-card h1 {
+        font-size: 20px;
+
+        margin-bottom: 12px;
+    }
+
+    .details-meta {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 7px;
+
+        font-size: 11px;
+    }
+
+    .details-divider {
+        margin: 20px 0;
+    }
+
+    .details-section {
+        margin-bottom: 23px;
+    }
+
+    .details-section h2 {
+        font-size: 15px;
+    }
+
+    .details-section p,
+    .key-points li {
+        font-size: 13px;
+    }
+
+    .mark-read-container {
+        margin-top: 25px;
+    }
+
+    .mark-read-button {
+        width: 100%;
+    }
+}

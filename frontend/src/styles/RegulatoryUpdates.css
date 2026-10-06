@@ -1,0 +1,541 @@
+/* =========================================
+   REGULATORY UPDATES PAGE
+========================================= */
+
+.regulatory-page {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 32px 36px 50px;
+}
+
+
+/* =========================================
+   PAGE HEADING
+========================================= */
+
+.regulatory-heading {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+
+.heading-icon {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f5eef3;
+    border-radius: 10px;
+
+    font-size: 23px;
+}
+
+.regulatory-heading h1 {
+    margin: 0 0 6px;
+
+    font-size: 27px;
+    font-weight: 700;
+
+    color: #272727;
+}
+
+.regulatory-heading p {
+    margin: 0;
+
+    font-size: 14px;
+    color: #777;
+}
+
+
+/* =========================================
+   SEARCH BAR
+========================================= */
+
+.regulatory-search {
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+
+    background: #ffffff;
+
+    border: 1px solid #dedede;
+    border-radius: 9px;
+
+    padding: 0 16px;
+
+    margin-bottom: 20px;
+
+    transition: 0.2s ease;
+}
+
+.regulatory-search:focus-within {
+    border-color: #572445;
+
+    box-shadow:
+        0 0 0 3px rgba(87, 36, 69, 0.08);
+}
+
+.search-icon {
+    font-size: 17px;
+    margin-right: 10px;
+}
+
+.regulatory-search input {
+    flex: 1;
+
+    height: 100%;
+
+    border: none;
+    outline: none;
+
+    font-size: 14px;
+
+    color: #333;
+
+    background: transparent;
+}
+
+.regulatory-search input::placeholder {
+    color: #999;
+}
+
+.search-button {
+    font-size: 17px;
+}
+
+
+/* =========================================
+   CATEGORY FILTER
+========================================= */
+
+.category-filter {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 35px;
+}
+
+.category-btn {
+    padding: 9px 17px;
+
+    background: #ffffff;
+
+    border: 1px solid #dddddd;
+
+    border-radius: 20px;
+
+    color: #555;
+
+    font-size: 13px;
+
+    transition: 0.2s ease;
+}
+
+.category-btn:hover {
+    border-color: #572445;
+
+    color: #572445;
+}
+
+.category-btn.active {
+    background: #572445;
+
+    border-color: #572445;
+
+    color: #ffffff;
+
+    font-weight: 600;
+}
+
+
+/* =========================================
+   SECTION TITLE
+========================================= */
+
+.section-title {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 16px;
+}
+
+.section-title span {
+    font-size: 19px;
+}
+
+.section-title h2 {
+    margin: 0;
+
+    font-size: 18px;
+
+    color: #292929;
+}
+
+
+/* =========================================
+   IMPORTANT UPDATE
+========================================= */
+
+.important-section {
+    margin-bottom: 34px;
+}
+
+.important-card {
+    position: relative;
+
+    background: #ffffff;
+
+    border: 1px solid #eadfe5;
+
+    border-left: 4px solid #d63939;
+
+    border-radius: 10px;
+
+    padding: 22px 24px;
+
+    box-shadow:
+        0 2px 8px rgba(0, 0, 0, 0.03);
+
+    transition: 0.2s ease;
+}
+
+.important-card:hover {
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.06);
+
+    transform: translateY(-1px);
+}
+
+.important-label {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    color: #c62828;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    margin-bottom: 12px;
+}
+
+.red-dot {
+    width: 8px;
+    height: 8px;
+
+    background: #d63939;
+
+    border-radius: 50%;
+
+    display: inline-block;
+}
+
+.important-card h3 {
+    margin: 0 0 7px;
+
+    font-size: 18px;
+
+    color: #292929;
+}
+
+.important-card p {
+    margin: 0 0 20px;
+
+    font-size: 13px;
+
+    color: #777;
+}
+
+.important-bottom {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+}
+
+
+/* =========================================
+   DATE
+========================================= */
+
+.update-date {
+    color: #777;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   READ MORE BUTTON
+========================================= */
+
+.read-more-btn {
+    background: transparent;
+
+    color: #572445;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    padding: 5px 0;
+
+    transition: 0.2s ease;
+}
+
+.read-more-btn:hover {
+    color: #7a3760;
+
+    transform: translateX(3px);
+}
+
+
+/* =========================================
+   LATEST UPDATES
+========================================= */
+
+.latest-section {
+    margin-bottom: 20px;
+}
+
+.updates-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 18px;
+}
+
+
+/* =========================================
+   UPDATE CARD
+========================================= */
+
+.regulatory-card {
+    min-height: 190px;
+
+    display: flex;
+    flex-direction: column;
+
+    background: #ffffff;
+
+    border: 1px solid #e3e3e3;
+
+    border-radius: 10px;
+
+    padding: 20px;
+
+    transition: all 0.2s ease;
+}
+
+.regulatory-card:hover {
+    border-color: #d4c0cd;
+
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.06);
+
+    transform: translateY(-2px);
+}
+
+.update-category {
+    width: fit-content;
+
+    padding: 5px 9px;
+
+    background: #f5eef3;
+
+    color: #572445;
+
+    border-radius: 4px;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.4px;
+
+    margin-bottom: 13px;
+}
+
+.regulatory-card h3 {
+    margin: 0 0 8px;
+
+    font-size: 16px;
+
+    line-height: 1.4;
+
+    color: #2b2b2b;
+}
+
+.regulatory-card p {
+    margin: 0;
+
+    color: #777;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    flex: 1;
+}
+
+.card-bottom {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    margin-top: 18px;
+}
+
+
+/* =========================================
+   NO RESULTS
+========================================= */
+
+.no-results {
+    background: #ffffff;
+
+    border: 1px solid #e3e3e3;
+
+    border-radius: 10px;
+
+    padding: 45px 20px;
+
+    text-align: center;
+}
+
+.no-results div {
+    font-size: 30px;
+
+    margin-bottom: 10px;
+}
+
+.no-results h3 {
+    margin: 0 0 6px;
+
+    color: #333;
+
+    font-size: 16px;
+}
+
+.no-results p {
+    margin: 0;
+
+    color: #888;
+
+    font-size: 13px;
+}
+
+
+/* =========================================
+   TABLET
+========================================= */
+
+@media (max-width: 900px) {
+
+    .regulatory-page {
+        padding: 28px 25px 40px;
+    }
+
+    .updates-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* =========================================
+   MOBILE
+========================================= */
+
+@media (max-width: 600px) {
+
+    .regulatory-page {
+        padding: 22px 15px 35px;
+    }
+
+    .regulatory-heading {
+        align-items: flex-start;
+
+        margin-bottom: 22px;
+    }
+
+    .heading-icon {
+        width: 42px;
+        height: 42px;
+
+        font-size: 19px;
+    }
+
+    .regulatory-heading h1 {
+        font-size: 22px;
+    }
+
+    .regulatory-heading p {
+        font-size: 12px;
+
+        line-height: 1.5;
+    }
+
+    .regulatory-search {
+        height: 48px;
+    }
+
+    .category-filter {
+        gap: 7px;
+
+        margin-bottom: 27px;
+    }
+
+    .category-btn {
+        padding: 7px 12px;
+
+        font-size: 11px;
+    }
+
+    .section-title h2 {
+        font-size: 16px;
+    }
+
+    .important-card {
+        padding: 18px;
+    }
+
+    .important-card h3 {
+        font-size: 16px;
+    }
+
+    .important-bottom {
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+    .updates-grid {
+        gap: 12px;
+    }
+
+    .regulatory-card {
+        min-height: 180px;
+
+        padding: 17px;
+    }
+}

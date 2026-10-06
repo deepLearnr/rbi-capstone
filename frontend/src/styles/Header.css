@@ -1,0 +1,428 @@
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    height: 70px;
+    width: 100%;
+    background: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 28px;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    box-sizing: border-box;
+
+    position: relative;
+    z-index: 1000;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.header-logo {
+    font-size: 22px;
+    font-weight: 700;
+    color: #572445;
+    letter-spacing: 0.5px;
+}
+
+
+/* =========================
+   RIGHT SIDE
+========================= */
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+/* =========================
+   GOOGLE TRANSLATE
+========================= */
+
+.google-translate-hidden {
+    display: none;
+}
+
+
+/* Hide Google's top translation bar */
+
+body {
+    top: 0 !important;
+}
+
+.goog-te-banner-frame {
+    display: none !important;
+}
+
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+}
+
+.goog-te-gadget {
+    display: none !important;
+}
+
+
+/* =========================
+   LANGUAGE
+========================= */
+
+.language-container {
+    position: relative;
+}
+
+.language-button {
+    height: 40px;
+
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    padding: 0 12px;
+
+    background: transparent;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+
+    color: #333;
+
+    font-size: 14px;
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.language-button:hover {
+    background: #f8f5f7;
+    border-color: #572445;
+}
+
+.language-icon {
+    font-size: 17px;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    margin-left: 3px;
+}
+
+
+/* Language Dropdown */
+
+.language-dropdown {
+    position: absolute;
+
+    top: 48px;
+    right: 0;
+
+    width: 150px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+    padding: 6px;
+
+    z-index: 2000;
+}
+
+.language-dropdown button {
+    width: 100%;
+
+    padding: 10px 12px;
+
+    border: none;
+    background: transparent;
+
+    text-align: left;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-size: 14px;
+
+    transition: 0.2s ease;
+}
+
+.language-dropdown button:hover {
+    background: #f3edf1;
+    color: #572445;
+}
+
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+.notification-button {
+    position: relative;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: transparent;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.notification-button:hover {
+    background: #f5f5f5;
+}
+
+.notification-dot {
+    position: absolute;
+
+    top: 7px;
+    right: 7px;
+
+    width: 7px;
+    height: 7px;
+
+    background: #d32f2f;
+
+    border-radius: 50%;
+
+    border: 2px solid white;
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile-container {
+    position: relative;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    border: none;
+
+    background: transparent;
+
+    cursor: pointer;
+
+    padding: 5px 8px;
+
+    border-radius: 8px;
+}
+
+.profile-button:hover {
+    background: #f7f7f7;
+}
+
+
+/* Avatar */
+
+.profile-avatar {
+    width: 38px;
+    height: 38px;
+
+    border-radius: 50%;
+
+    background: #572445;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.profile-avatar.large {
+    width: 42px;
+    height: 42px;
+}
+
+
+/* Profile Text */
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.profile-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #222;
+}
+
+.profile-role {
+    font-size: 11px;
+    color: #777;
+}
+
+
+/* =========================
+   PROFILE DROPDOWN
+========================= */
+
+.profile-dropdown {
+    position: absolute;
+
+    top: 52px;
+    right: 0;
+
+    width: 230px;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+    padding: 8px;
+
+    z-index: 3000;
+}
+
+
+/* Dropdown Header */
+
+.profile-dropdown-header {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px;
+}
+
+.profile-dropdown-header div:last-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-dropdown-header strong {
+    font-size: 14px;
+    color: #222;
+}
+
+.profile-dropdown-header span {
+    font-size: 12px;
+    color: #777;
+    margin-top: 3px;
+}
+
+
+/* Divider */
+
+.dropdown-divider {
+    height: 1px;
+
+    background: #eeeeee;
+
+    margin: 5px 0;
+}
+
+
+/* Dropdown Item */
+
+.dropdown-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 11px 12px;
+
+    border: none;
+
+    background: transparent;
+
+    border-radius: 8px;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    font-size: 14px;
+
+    color: #333;
+
+    transition: 0.2s ease;
+}
+
+.dropdown-item:hover {
+    background: #f5f1f4;
+    color: #572445;
+}
+
+.dropdown-item span {
+    font-size: 17px;
+}
+
+
+/* Logout */
+
+.logout-item {
+    color: #c62828;
+}
+
+.logout-item:hover {
+    background: #fff1f1;
+    color: #c62828;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+    .header {
+        padding: 0 15px;
+    }
+
+    .header-right {
+        gap: 8px;
+    }
+
+    .profile-info {
+        display: none;
+    }
+
+    .language-button span:nth-child(2) {
+        display: none;
+    }
+
+    .language-button {
+        padding: 0 9px;
+    }
+
+    .header-logo {
+        font-size: 18px;
+    }
+}

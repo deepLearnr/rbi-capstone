@@ -1,0 +1,103 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary: #572445;
+    --primary-light: #71325a;
+    --secondary: #7fa1c3;
+    --background: #f5f7fa;
+    --white: #ffffff;
+    --text: #222222;
+    --muted: #777777;
+    --border: #e5e7eb;
+    --success: #2e8b57;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+button {
+    font-family: inherit;
+    cursor: pointer;
+    border: none;
+}
+
+.app {
+    min-height: 100vh;
+}
+
+.app-body {
+    display: flex;
+    min-height: calc(100vh - 70px);
+}
+
+.main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* =========================================
+   COMPLETELY HIDE GOOGLE TRANSLATE UI
+========================================= */
+
+/* Google Translate main elements */
+#google_translate_element,
+.goog-te-gadget,
+.goog-te-gadget-simple {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    opacity: 0 !important;
+}
+
+/* Google Translate top bar */
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Google Translate iframe */
+iframe.goog-te-banner-frame,
+iframe[id^=":"] {
+    display: none !important;
+}
+
+/* Remove Google injected spacing */
+body {
+    top: 0 !important;
+    margin-top: 0 !important;
+}
+
+/* Google translation tooltip */
+.goog-tooltip,
+.goog-tooltip:hover {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* Google highlighted text */
+.goog-text-highlight {
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+/* Hide Google Translate popup */
+#goog-gt-tt {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* Hide Google Translate balloon */
+.goog-te-balloon-frame {
+    display: none !important;
+}

@@ -1,0 +1,243 @@
+.my-results-page {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 30px 35px 50px;
+    box-sizing: border-box;
+}
+
+/* Header */
+
+.my-results-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.my-results-header h1 {
+    margin: 0 0 8px;
+    color: #572445;
+    font-size: 27px;
+}
+
+.my-results-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.results-back-btn {
+    border: 1px solid #572445;
+    background: #fff;
+    color: #572445;
+    padding: 10px 16px;
+    border-radius: 7px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.results-back-btn:hover {
+    background: #f8f1f5;
+}
+
+/* Performance Cards */
+
+.performance-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 35px;
+}
+
+.performance-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 22px;
+    min-height: 110px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.performance-card:hover {
+    border-color: #572445;
+}
+
+.performance-label {
+    color: #666;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.performance-card strong {
+    color: #572445;
+    font-size: 30px;
+}
+
+/* History */
+
+.performance-history {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.history-header {
+    padding: 22px 24px;
+    border-bottom: 1px solid #ddd;
+}
+
+.history-header h2 {
+    margin: 0 0 6px;
+    color: #333;
+    font-size: 18px;
+}
+
+.history-header p {
+    margin: 0;
+    color: #777;
+    font-size: 13px;
+}
+
+/* Table */
+
+.history-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.history-table {
+    width: 100%;
+    min-width: 650px;
+    border-collapse: collapse;
+}
+
+.history-table th {
+    background: #f7f7f7;
+    color: #555;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: left;
+    padding: 14px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.history-table td {
+    color: #555;
+    font-size: 13px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.history-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.history-table tbody tr:hover {
+    background: #fafafa;
+}
+
+.assessment-name {
+    color: #333 !important;
+    font-weight: 600;
+}
+
+.assessment-score {
+    color: #572445 !important;
+    font-weight: 700;
+}
+
+.history-status {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.history-status.passed {
+    color: #388e3c;
+}
+
+.history-status.failed {
+    color: #d64545;
+}
+
+/* Summary */
+
+.performance-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.performance-summary div {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 9px;
+    padding: 18px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.performance-summary span {
+    color: #666;
+    font-size: 13px;
+}
+
+.performance-summary strong {
+    color: #572445;
+    font-size: 20px;
+}
+
+/* Responsive */
+
+@media (max-width: 850px) {
+    .performance-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .my-results-header {
+        align-items: flex-start;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .my-results-page {
+        padding: 20px 15px 35px;
+    }
+
+    .my-results-header {
+        flex-direction: column;
+    }
+
+    .my-results-header h1 {
+        font-size: 23px;
+    }
+
+    .results-back-btn {
+        width: 100%;
+    }
+
+    .performance-cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .performance-card {
+        padding: 17px;
+    }
+
+    .performance-card strong {
+        font-size: 25px;
+    }
+
+    .performance-summary {
+        grid-template-columns: 1fr;
+    }
+}
