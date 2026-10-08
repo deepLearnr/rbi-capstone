@@ -1,19 +1,107 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import "../styles/RegulatoryDetails.css";
+
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://127.0.0.1:8000";
+
+function formatDate(dateString) {
+  if (!dateString) return "Date not available";
+
+  return new Date(`${dateString}T00:00:00`).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
+}
 
 function RegulatoryDetails() {
   const navigate = useNavigate();
+  const { id } = useParams();
+
+  const [update, setUpdate] = useState(null);
   const [isRead, setIsRead] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadUpdate = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await fetch(
+          `${API_BASE_URL}/api/regulatory/updates/${id}`,
+        );
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error("Regulatory update not found.");
+          }
+
+          throw new Error("Unable to load regulatory update.");
+        }
+
+        const data = await response.json();
+        setUpdate(data);
+      } catch (err) {
+        setError(err.message || "Unable to load regulatory update.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadUpdate();
+  }, [id]);
 
   const handleMarkAsRead = () => {
     setIsRead(true);
   };
 
+  if (loading) {
+    return (
+      <div className="regulatory-details-page">
+        <button
+          className="back-button"
+          onClick={() => navigate("/updates")}
+        >
+          ← Back to Regulatory Updates
+        </button>
+
+        <div className="details-card">
+          <h1>Loading regulatory update...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !update) {
+    return (
+      <div className="regulatory-details-page">
+        <button
+          className="back-button"
+          onClick={() => navigate("/updates")}
+        >
+          ← Back to Regulatory Updates
+        </button>
+
+        <div className="details-card">
+          <h1>Unable to load update</h1>
+          <p>{error || "Regulatory update not found."}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const simplification = update.simplification;
+
   return (
     <div className="regulatory-details-page">
       {/* Back Button */}
-      <button className="back-button" onClick={() => navigate("/updates")}>
+      <button
+        className="back-button"
+        onClick={() => navigate("/updates")}
+      >
         ← Back to Regulatory Updates
       </button>
 
@@ -22,17 +110,21 @@ function RegulatoryDetails() {
         {/* Category */}
         <div className="details-category">
           <span className="category-dot"></span>
-          COMPLIANCE
+          {update.category.toUpperCase()}
         </div>
 
         {/* Title */}
-        <h1>New Regulatory Guidelines</h1>
+        <h1>{update.title}</h1>
 
         {/* Meta Information */}
         <div className="details-meta">
-          <span>📅 25 September 2026</span>
+          <span>
+            📅 {formatDate(update.publication_date)}
+          </span>
 
-          <span>👁 245 views</span>
+          <span>
+            Effective: {formatDate(update.effective_date)}
+          </span>
         </div>
 
         <div className="details-divider"></div>
@@ -41,36 +133,48 @@ function RegulatoryDetails() {
         <section className="details-section">
           <h2>Overview</h2>
 
-          <p>
-            This update provides information about the latest regulatory
-            requirements applicable to employees.
-          </p>
+          <p>{simplification.executive_summary}</p>
         </section>
 
-        {/* Key Points */}
+        {/* What Changed */}
         <section className="details-section">
-          <h2>Key Points</h2>
+          <h2>What Changed</h2>
+
+          <p>{simplification.what_changed}</p>
+        </section>
+
+        {/* Why It Matters */}
+        <section className="details-section">
+          <h2>Why It Matters</h2>
+
+          <p>{simplification.why_it_matters}</p>
+        </section>
+
+        {/* Who Is Affected */}
+        <section className="details-section">
+          <h2>Who Is Affected</h2>
 
           <ul className="key-points">
-            <li>
-              <span>✓</span>
-              Important regulatory changes
-            </li>
+            {simplification.who_is_affected.map((item) => (
+              <li key={item}>
+                <span>✓</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
 
-            <li>
-              <span>✓</span>
-              Employee responsibilities
-            </li>
+        {/* What Should I Do */}
+        <section className="details-section">
+          <h2>What Should I Do?</h2>
 
-            <li>
-              <span>✓</span>
-              Effective date
-            </li>
-
-            <li>
-              <span>✓</span>
-              Compliance requirements
-            </li>
+          <ul className="key-points">
+            {simplification.what_should_i_do.map((item) => (
+              <li key={item}>
+                <span>✓</span>
+                {item}
+              </li>
+            ))}
           </ul>
         </section>
 
@@ -78,15 +182,55 @@ function RegulatoryDetails() {
         <section className="details-section">
           <h2>Effective From</h2>
 
-          <div className="effective-date">01 October 2026</div>
+          <div className="effective-date">
+            {formatDate(update.effective_date)}
+          </div>
         </section>
 
-        {/* Related Document */}
-        <section className="details-section">
-          <h2 className="document-heading">📎 Related Document</h2>
+        {/* Terminology */}
+        {simplification.terminology?.length > 0 && (
+          <section className="details-section">
+            <h2>Important Terminology</h2>
 
-          <button className="document-button">View / Download Circular</button>
-        </section>
+            <ul className="key-points">
+              {simplification.terminology.map((item) => (
+                <li key={item.term}>
+                  <span>✓</span>
+                  <strong>{item.term}:</strong>&nbsp;{item.meaning}
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {/* Source Provenance */}
+        {update.document && (
+          <section className="details-section">
+            <h2 className="document-heading">📎 Source</h2>
+
+            <div>
+              <strong>RBI Reference:</strong>{" "}
+              {update.document.rbi_reference || "Not specified"}
+            </div>
+
+            <div>
+              <strong>Source File:</strong>{" "}
+              {update.document.source_file || "Not specified"}
+            </div>
+
+            {update.document.source_url && (
+              <div style={{ marginTop: "8px" }}>
+                <a
+                  href={update.document.source_url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View RBI Source
+                </a>
+              </div>
+            )}
+          </section>
+        )}
 
         {/* Mark As Read */}
         <div className="mark-read-container">
