@@ -20,6 +20,7 @@ class RetrievedChunk:
     section_reference: str | None
     heading: str | None
     distance: float
+    regulatory_status: str | None
 
 
 def retrieve_chunks(
@@ -48,6 +49,9 @@ def retrieve_chunks(
         for chunk, chunk_distance in results:
             document = chunk.document
 
+            metadata = chunk.chunk_metadata or {}
+            regulatory_status = metadata.get("regulatory_status")
+
             retrieved.append(
                 RetrievedChunk(
                     chunk=chunk,
@@ -60,6 +64,7 @@ def retrieve_chunks(
                     section_reference=chunk.section_reference,
                     heading=chunk.heading,
                     distance=float(chunk_distance),
+                    regulatory_status=regulatory_status,
                 )
             )
 

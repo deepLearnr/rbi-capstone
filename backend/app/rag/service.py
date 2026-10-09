@@ -7,6 +7,19 @@ from app.rag.prompt import build_rag_prompt
 from app.rag.schemas import RAGAnswer, SourceCitation
 from app.retrieval.service import retrieve_chunks
 
+CURRENT_APPLICABILITY_PATTERN = re.compile(
+    r"\b("
+    r"currently|current|today|presently|latest|"
+    r"still in force|in force|remains applicable|"
+    r"currently applicable|current requirements|"
+    r"as of now|now applicable"
+    r")\b",
+    flags=re.IGNORECASE,
+)
+
+
+def asks_about_current_applicability(question: str) -> bool:
+    return bool(CURRENT_APPLICABILITY_PATTERN.search(question))
 
 def parse_evidence_response(response: str) -> tuple[
     Literal["supported", "insufficient"],
@@ -149,9 +162,52 @@ def answer_question(
             page_start=retrieved_by_id[eid].page_start,
             page_end=retrieved_by_id[eid].page_end,
             section=retrieved_by_id[eid].heading,
+            regulatory_status=retrieved_by_id[eid].regulatory_status,
         )
         for eid in evidence_ids
     ]
+
+    withdrawn_citations = [
+        citation
+        for citation in citations
+        if (citation.regulatory_status or "").strip().lower()
+        == "withdrawn"
+    ]
+
+    has_withdrawn_citation = bool(withdrawn_citations)
+    has_non_withdrawn_citation = any(
+        (citation.regulatory_status or "").strip().lower() != "withdrawn"
+        for citation in citations
+    )
+
+    if (
+        asks_about_current_applicability(question)
+        and has_withdrawn_citation
+        and not has_non_withdrawn_citation
+    ):
+        return RAGAnswer(
+            answer=(
+                "The retrieved evidence includes a document marked "
+                "withdrawn and does not establish current regulatory "
+                "applicability. Please consult the applicable current "
+                "RBI directions before relying on these requirements."
+            ),
+            citations=[],
+            evidence_status="insufficient",
+        )
+
+    if withdrawn_citations and not re.search(
+        r"\bwithdrawn\b",
+        answer,
+        flags=re.IGNORECASE,
+    ):
+        answer = (
+            "Historical-source warning: This answer cites an RBI "
+            "document marked withdrawn in the source metadata. "
+            "It is historical material and does not establish "
+            "current regulatory requirements.\n\n"
+            + answer
+        )
 
     return RAGAnswer(
         answer=answer,

@@ -1,167 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/MyResults.css";
+import { learningApi } from "../services/learningApi";
+import "../styles/LearningFlow.css";
 
 function MyResults() {
   const navigate = useNavigate();
+  const [attempts, setAttempts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const performance = {
-    averageScore: 78,
-    testsCompleted: 12,
-    passed: 10,
-    attempts: 15,
-  };
-
-  const history = [
-    {
-      assessment: "Banking Basics",
-      score: "85%",
-      status: "Passed",
-      date: "20 Sep 2026",
-    },
-    {
-      assessment: "Compliance",
-      score: "78%",
-      status: "Passed",
-      date: "18 Sep 2026",
-    },
-    {
-      assessment: "Cyber Security",
-      score: "72%",
-      status: "Passed",
-      date: "16 Sep 2026",
-    },
-    {
-      assessment: "Risk Management",
-      score: "58%",
-      status: "Failed",
-      date: "15 Sep 2026",
-    },
-    {
-      assessment: "Digital Banking",
-      score: "81%",
-      status: "Passed",
-      date: "12 Sep 2026",
-    },
-  ];
+  useEffect(() => {
+    learningApi.attempts()
+      .then(setAttempts)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, []);
 
   return (
-    <div className="my-results-page">
-      {/* Header */}
-
-      <div className="my-results-header">
-        <div>
-          <h1>📊 My Assessment Performance</h1>
-          <p>
-            View your assessment scores and track your learning performance.
-          </p>
+    <div className="learning-flow-page">
+      <header className="learning-flow-header">
+        <p className="learning-flow-eyebrow">RBI SAATHI · YOUR LEARNING</p>
+        <h1>My Results</h1>
+        <p>Assessment attempts retrieved from persistent backend storage.</p>
+      </header>
+      {loading && <p role="status">Loading saved results…</p>}
+      {error && <p className="learning-flow-error" role="alert">{error}</p>}
+      {!loading && !error && attempts.length === 0 && (
+        <div className="learning-flow-panel">
+          <h2>No saved attempts yet</h2>
+          <button className="learning-flow-button" onClick={() => navigate("/assessments")}>Take an assessment</button>
         </div>
-
-        <button
-          className="results-back-btn"
-          onClick={() => navigate("/assessments")}
-        >
-          ← Assessments
-        </button>
-      </div>
-
-      {/* Performance Cards */}
-
-      <div className="performance-cards">
-        <div className="performance-card">
-          <span className="performance-label">Average Score</span>
-
-          <strong>{performance.averageScore}%</strong>
-        </div>
-
-        <div className="performance-card">
-          <span className="performance-label">Tests Completed</span>
-
-          <strong>{performance.testsCompleted}</strong>
-        </div>
-
-        <div className="performance-card">
-          <span className="performance-label">Passed</span>
-
-          <strong>{performance.passed}</strong>
-        </div>
-
-        <div className="performance-card">
-          <span className="performance-label">Attempts</span>
-
-          <strong>{performance.attempts}</strong>
-        </div>
-      </div>
-
-      {/* Performance History */}
-
-      <section className="performance-history">
-        <div className="history-header">
-          <div>
-            <h2>Performance History</h2>
-            <p>Your recent assessment results</p>
+      )}
+      {attempts.map((attempt) => (
+        <article className="learning-flow-panel" key={attempt.id}>
+          <div className="learning-flow-row">
+            <div>
+              <h2>{attempt.assessment_title}</h2>
+              <p>{attempt.module_title}</p>
+              <p>{new Date(attempt.completed_at).toLocaleString()}</p>
+            </div>
+            <div className="learning-flow-result">
+              <strong>{attempt.score_percent}%</strong>
+              <span>{attempt.passed ? "Passed" : "Not passed"}</span>
+            </div>
           </div>
-        </div>
-
-        <div className="history-table-wrapper">
-          <table className="history-table">
-            <thead>
-              <tr>
-                <th>Assessment</th>
-                <th>Score</th>
-                <th>Status</th>
-                <th>Date</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {history.map((item, index) => (
-                <tr key={index}>
-                  <td className="assessment-name">{item.assessment}</td>
-
-                  <td className="assessment-score">{item.score}</td>
-
-                  <td>
-                    <span
-                      className={`history-status ${
-                        item.status === "Passed" ? "passed" : "failed"
-                      }`}
-                    >
-                      {item.status === "Passed" ? "✓ Passed" : "✕ Failed"}
-                    </span>
-                  </td>
-
-                  <td>{item.date}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Summary */}
-
-      <div className="performance-summary">
-        <div>
-          <span>Pass Rate</span>
-          <strong>
-            {Math.round(
-              (performance.passed / performance.testsCompleted) * 100,
-            )}
-            %
-          </strong>
-        </div>
-
-        <div>
-          <span>Failed Tests</span>
-          <strong>{performance.testsCompleted - performance.passed}</strong>
-        </div>
-
-        <div>
-          <span>Total Attempts</span>
-          <strong>{performance.attempts}</strong>
-        </div>
-      </div>
+          <p>{attempt.correct_count} / {attempt.total_questions} correct</p>
+        </article>
+      ))}
     </div>
   );
 }

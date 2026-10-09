@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.assistant import router as assistant_router
 from app.api.circulars import router as circular_router
 from app.api.documents import router as document_router
-
+from app.api.learning import router as learning_router
 from app.api.regulatory import router as regulatory_router
 
 app = FastAPI(
@@ -27,6 +27,7 @@ app.include_router(circular_router)
 app.include_router(document_router)
 app.include_router(assistant_router)
 app.include_router(regulatory_router)
+app.include_router(learning_router)
 
 
 @app.get("/health")

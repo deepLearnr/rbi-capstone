@@ -1,121 +1,47 @@
-import React from "react";
-import "../styles/Progress.css";
+import React, { useEffect, useState } from "react";
+import { learningApi } from "../services/learningApi";
+import "../styles/LearningFlow.css";
 
 function Progress() {
-  const learningPaths = [
-    {
-      name: "Regulatory & Compliance",
-      progress: 85,
-    },
-    {
-      name: "Core Banking",
-      progress: 72,
-    },
-    {
-      name: "Cyber Security",
-      progress: 100,
-    },
-    {
-      name: "Risk Management",
-      progress: 50,
-    },
-    {
-      name: "Digital Banking",
-      progress: 75,
-    },
-  ];
+  const [data, setData] = useState(null);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    learningApi.progress().then(setData).catch((err) => setError(err.message));
+  }, []);
 
   return (
-    <div className="progress-page">
-      {/* Page Header */}
-      <div className="progress-header">
+    <div className="learning-flow-page">
+      <header className="learning-flow-header">
+        <p className="learning-flow-eyebrow">RBI SAATHI · YOUR LEARNING</p>
         <h1>My Progress</h1>
-        <p>Track your learning journey and performance</p>
-      </div>
-
-      {/* Summary Cards */}
-      <div className="progress-summary">
-        <div className="progress-card">
-          <span className="progress-card-title">
-            Overall
-            <br />
-            Progress
-          </span>
-
-          <strong>72%</strong>
-        </div>
-
-        <div className="progress-card">
-          <span className="progress-card-title">
-            Courses
-            <br />
-            Completed
-          </span>
-
-          <strong>12</strong>
-        </div>
-
-        <div className="progress-card">
-          <span className="progress-card-title">
-            Learning
-            <br />
-            Hours
-          </span>
-
-          <strong>18h</strong>
-        </div>
-
-        <div className="progress-card">
-          <span className="progress-card-title">
-            Assessments
-            <br />
-            Average
-          </span>
-
-          <strong>82%</strong>
-        </div>
-      </div>
-
-      {/* Overall Learning Progress */}
-      <section className="overall-progress-section">
-        <h2>📈 Overall Learning Progress</h2>
-
-        <div className="overall-progress-card">
-          <div className="overall-percentage">72%</div>
-
-          <div className="large-progress-bar">
-            <div className="large-progress-fill" style={{ width: "72%" }}></div>
+        <p>Progress and assessment statistics saved by the backend.</p>
+      </header>
+      {error && <p className="learning-flow-error" role="alert">{error}</p>}
+      {!data && !error && <p role="status">Loading progress…</p>}
+      {data && (
+        <>
+          <div className="learning-flow-grid">
+            <article className="learning-flow-card"><span>Overall module progress</span><div className="learning-flow-score">{data.overall_progress}%</div></article>
+            <article className="learning-flow-card"><span>Modules completed</span><div className="learning-flow-score">{data.modules_completed}/{data.module_count}</div></article>
+            <article className="learning-flow-card"><span>Average assessment score</span><div className="learning-flow-score">{data.assessment_average}%</div></article>
+            <article className="learning-flow-card"><span>Saved attempts</span><div className="learning-flow-score">{data.attempts_count}</div></article>
           </div>
-
-          <p>12 of 17 courses completed</p>
-        </div>
-      </section>
-
-      {/* Learning Paths */}
-      <section className="learning-paths-progress">
-        <h2>📚 Learning Paths</h2>
-
-        <div className="path-list">
-          {learningPaths.map((path, index) => (
-            <div className="path-item" key={index}>
-              <div className="path-name">{path.name}</div>
-
-              <div className="path-progress-wrapper">
-                <div className="path-progress-bar">
-                  <div
-                    className="path-progress-fill"
-                    style={{
-                      width: `${path.progress}%`,
-                    }}
-                  ></div>
+          <section className="learning-flow-section">
+            <h2>Learning modules</h2>
+            {data.modules.map((module) => (
+              <article className="learning-flow-panel" key={module.module_id}>
+                <div className="learning-flow-row">
+                  <div><h3>{module.title}</h3><p>{module.category}</p></div>
+                  <strong>{module.progress_percent}%</strong>
                 </div>
-
-                <span className="path-percentage">{path.progress}%</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+                <div className="learning-flow-progress-track"><span style={{ width: `${module.progress_percent}%` }} /></div>
+              </article>
+            ))}
+          </section>
+        </>
+      )}
+      <p className="learning-flow-disclaimer">This demo currently tracks one shared demo learner because user authentication is not implemented.</p>
     </div>
   );
 }

@@ -71,15 +71,6 @@ class DocumentChunk(Base):
         nullable=True,
     )
 
-    @property
-    def metadata(self) -> dict | None:
-        """Provides an alias so Pydantic can fetch this field as 'metadata'"""
-        return self.chunk_metadata
-
-    @metadata.setter
-    def metadata(self, value: dict | None):
-        """Allows assigning values directly to .metadata"""
-        self.chunk_metadata = value
 
     content_hash: Mapped[str | None] = mapped_column(
         Text,

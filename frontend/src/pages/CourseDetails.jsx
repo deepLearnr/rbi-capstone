@@ -1,313 +1,92 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import "../styles/CourseDetails.css";
+import { learningApi } from "../services/learningApi";
+import "../styles/LearningFlow.css";
 
 function CourseDetails() {
-  const navigate = useNavigate();
   const { id } = useParams();
+  const navigate = useNavigate();
+  const [module, setModule] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-  const learningPaths = [
-    {
-      id: 1,
-      title: "Core Banking",
-      icon: "🏦",
-      courses: 8,
-      duration: "6 Hours",
-      level: "Beginner",
-    },
-    {
-      id: 2,
-      title: "Regulatory & Compliance",
-      icon: "📋",
-      courses: 6,
-      duration: "4 Hours",
-      level: "Beginner",
-    },
-    {
-      id: 3,
-      title: "Risk Management",
-      icon: "⚠️",
-      courses: 5,
-      duration: "3 Hours",
-      level: "Intermediate",
-    },
-    {
-      id: 4,
-      title: "Cyber Security",
-      icon: "🔐",
-      courses: 5,
-      duration: "3 Hours",
-      level: "Beginner",
-    },
-    {
-      id: 5,
-      title: "Digital Banking",
-      icon: "💻",
-      courses: 7,
-      duration: "5 Hours",
-      level: "Intermediate",
-    },
-    {
-      id: 6,
-      title: "Role-Based Learning",
-      icon: "👔",
-      courses: 10,
-      duration: "8 Hours",
-      level: "Advanced",
-    },
-  ];
+  const loadModule = () => learningApi.module(id).then(setModule);
 
-  const courseData = {
-    1: [
-      {
-        id: 1,
-        title: "Introduction to Core Banking",
-        type: "📹 Video",
-        duration: "30 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-      {
-        id: 2,
-        title: "Core Banking Operations",
-        type: "📄 Reading",
-        duration: "45 min",
-        status: "In Progress — 40%",
-        action: "Continue →",
-      },
-      {
-        id: 3,
-        title: "Banking Products & Services",
-        type: "🎥 Video + Quiz",
-        duration: "60 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-    ],
+  useEffect(() => {
+    setLoading(true);
+    loadModule()
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
+  }, [id]);
 
-    2: [
-      {
-        id: 1,
-        title: "Introduction to Regulatory Compliance",
-        type: "📹 Video",
-        duration: "30 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-      {
-        id: 2,
-        title: "KYC Fundamentals",
-        type: "📄 Reading",
-        duration: "45 min",
-        status: "In Progress — 40%",
-        action: "Continue →",
-      },
-      {
-        id: 3,
-        title: "AML Awareness",
-        type: "🎥 Video + Quiz",
-        duration: "60 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-    ],
-
-    3: [
-      {
-        id: 1,
-        title: "Introduction to Risk Management",
-        type: "📹 Video",
-        duration: "30 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-      {
-        id: 2,
-        title: "Credit Risk Fundamentals",
-        type: "📄 Reading",
-        duration: "45 min",
-        status: "In Progress — 40%",
-        action: "Continue →",
-      },
-      {
-        id: 3,
-        title: "Operational Risk",
-        type: "🎥 Video + Quiz",
-        duration: "60 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-    ],
-
-    4: [
-      {
-        id: 1,
-        title: "Cyber Security Basics",
-        type: "📹 Video",
-        duration: "30 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-      {
-        id: 2,
-        title: "Password & Access Security",
-        type: "📄 Reading",
-        duration: "45 min",
-        status: "In Progress — 40%",
-        action: "Continue →",
-      },
-      {
-        id: 3,
-        title: "Phishing Awareness",
-        type: "🎥 Video + Quiz",
-        duration: "60 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-    ],
-
-    5: [
-      {
-        id: 1,
-        title: "Introduction to Digital Banking",
-        type: "📹 Video",
-        duration: "30 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-      {
-        id: 2,
-        title: "Digital Payment Systems",
-        type: "📄 Reading",
-        duration: "45 min",
-        status: "In Progress — 40%",
-        action: "Continue →",
-      },
-      {
-        id: 3,
-        title: "Digital Banking Security",
-        type: "🎥 Video + Quiz",
-        duration: "60 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-    ],
-
-    6: [
-      {
-        id: 1,
-        title: "Role Based Banking Fundamentals",
-        type: "📹 Video",
-        duration: "30 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-      {
-        id: 2,
-        title: "Employee Responsibilities",
-        type: "📄 Reading",
-        duration: "45 min",
-        status: "In Progress — 40%",
-        action: "Continue →",
-      },
-      {
-        id: 3,
-        title: "Role Based Assessment",
-        type: "🎥 Video + Quiz",
-        duration: "60 min",
-        status: "Not Started",
-        action: "Start Learning →",
-      },
-    ],
+  const markComplete = async () => {
+    try {
+      setSaving(true);
+      await learningApi.updateProgress(id, 100);
+      await loadModule();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const selectedPath = learningPaths.find((path) => path.id === Number(id));
-
-  const courses = courseData[id] || [];
-
-  if (!selectedPath) {
-    return (
-      <div className="course-not-found">
-        <h2>Learning Path Not Found</h2>
-
-        <button onClick={() => navigate("/learning")}>
-          ← Back to Learning Paths
-        </button>
-      </div>
-    );
-  }
+  if (loading) return <div className="learning-flow-page"><p>Loading module…</p></div>;
+  if (error || !module) return (
+    <div className="learning-flow-page">
+      <button className="learning-flow-link" onClick={() => navigate("/learning")}>← Learning paths</button>
+      <p className="learning-flow-error" role="alert">{error || "Module not found."}</p>
+    </div>
+  );
 
   return (
-    <div className="course-details-page">
-      {/* Back Button */}
-      <button
-        className="course-back-button"
-        onClick={() => navigate("/learning")}
-      >
-        ← Back to Learning Paths
-      </button>
+    <div className="learning-flow-page">
+      <button className="learning-flow-link" onClick={() => navigate("/learning")}>← Learning paths</button>
+      <header className="learning-flow-header">
+        <p className="learning-flow-eyebrow">{module.category} · {module.difficulty}</p>
+        <h1>{module.title}</h1>
+        <p>{module.description}</p>
+        <p className="learning-flow-progress-label">
+          Saved progress: {module.progress_percent}%{module.completed ? " · Completed" : ""}
+        </p>
+      </header>
 
-      {/* Learning Path Header */}
-      <div className="course-path-header">
-        <div className="course-path-icon">{selectedPath.icon}</div>
-
-        <div>
-          <h1>{selectedPath.title}</h1>
-
-          <div className="course-path-meta">
-            <span>📚 {selectedPath.courses} Courses</span>
-
-            <span>⏱️ {selectedPath.duration}</span>
-
-            <span>🎯 {selectedPath.level}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="course-divider"></div>
-
-      {/* Courses */}
-      <section className="courses-section">
-        <h2>Courses</h2>
-
-        <div className="courses-list">
-          {courses.map((course, index) => (
-            <div className="course-item" key={course.id}>
-              <div className="course-number">Course {index + 1}</div>
-
-              <div className="course-content">
-                <h3>{course.title}</h3>
-
-                <div className="course-info">
-                  <span>{course.type}</span>
-
-                  <span>⏱️ {course.duration}</span>
-                </div>
-
-                <div
-                  className={`course-status ${
-                    course.status.includes("In Progress")
-                      ? "in-progress"
-                      : "not-started"
-                  }`}
-                >
-                  {course.status}
-                </div>
-
-                <div className="course-action">
-                  <button
-                    onClick={() =>
-                      navigate(`/learning/${id}/course/${course.id}`)
-                    }
-                  >
-                    {course.action}
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
+      <section className="learning-flow-section">
+        <h2>Learning sections</h2>
+        {module.sections.map((section) => (
+          <article className="learning-flow-panel" key={section.id}>
+            <h3>{section.section_order}. {section.title}</h3>
+            <p>{section.content}</p>
+          </article>
+        ))}
+        <button
+          className="learning-flow-button"
+          onClick={markComplete}
+          disabled={saving || module.completed}
+        >
+          {saving ? "Saving…" : module.completed ? "Module completed ✓" : "Mark module complete"}
+        </button>
       </section>
+
+      <section className="learning-flow-section">
+        <h2>Assessments</h2>
+        {module.assessments.length === 0 && <p>No assessment is attached to this module yet.</p>}
+        {module.assessments.map((assessment) => (
+          <article className="learning-flow-panel learning-flow-row" key={assessment.id}>
+            <div>
+              <h3>{assessment.title}</h3>
+              <p>{assessment.question_count} questions · {assessment.duration_minutes} minutes · Pass: {assessment.passing_score}%</p>
+            </div>
+            <button className="learning-flow-button" onClick={() => navigate(`/assessments/${assessment.id}`)}>
+              Start assessment
+            </button>
+          </article>
+        ))}
+      </section>
+      <p className="learning-flow-disclaimer">
+        This module provides foundational learning and does not replace applicable current RBI directions or approved institutional policy.
+      </p>
     </div>
   );
 }

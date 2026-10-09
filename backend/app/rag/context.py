@@ -21,6 +21,7 @@ def build_context(results: list[RetrievedChunk]) -> str:
                     f"Pages: {page_reference or 'Not available'}",
                     f"Section: {result.heading or 'Not available'}",
                     f"Source File: {result.source_file or 'Not available'}",
+                    f"Regulatory Status: {result.regulatory_status or 'Not specified'}",
                     "",
                     result.chunk.content,
                 ]

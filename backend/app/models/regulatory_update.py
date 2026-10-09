@@ -1,6 +1,6 @@
 from datetime import date, datetime
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, JSON, String, Text
+from sqlalchemy import Date, DateTime, ForeignKey, Integer, JSON, String
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
@@ -67,5 +67,5 @@ class RegulatoryUpdate(Base):
 
     document = relationship(
         "Document",
-	lazy="joined",
+	    lazy="joined",
     )

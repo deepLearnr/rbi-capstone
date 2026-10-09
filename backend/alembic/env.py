@@ -6,7 +6,11 @@ from sqlalchemy import pool
 from alembic import context
 
 from app.db.session import Base, settings
-from app.models import Document, DocumentChunk
+from app.models import (
+    Document,
+    DocumentChunk,
+    RegulatoryUpdate,
+)
 
 
 config = context.config

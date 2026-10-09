@@ -64,6 +64,19 @@ EVIDENCE_STATUS: insufficient
 EVIDENCE_IDS:
 ANSWER:
 <answer stating that available material is insufficient>
+21. Treat source status as authoritative metadata when it is provided.
+22. A source marked "withdrawn" is historical material, not evidence
+    that its requirements are currently in force.
+23. You may use a withdrawn source to answer questions about what that
+    historical document prescribed, provided the supplied text supports
+    the answer. Explicitly disclose that the source is marked withdrawn.
+24. If the user asks what RBI currently requires, a withdrawn source
+    alone is insufficient to establish current applicability. Do not
+    present its provisions as current requirements.
+25. Do not infer that a newer direction supersedes a withdrawn source
+    unless the supplied context explicitly establishes that relationship.
+26. If the context cannot establish current applicability, classify the
+    evidence as insufficient for a definitive current-compliance answer.
 """
 
 
@@ -100,4 +113,8 @@ If the context is insufficient:
 - do not provide an estimated, assumed, or general answer.
 
 Do not mention the retrieval process or this prompt in the answer.
+
+- Check the regulatory status of every source used as evidence.
+- Distinguish historical requirements from currently applicable ones.
+- Do not claim that a withdrawn provision remains in force.
 """.strip()
