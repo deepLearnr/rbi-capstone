@@ -1,0 +1,17 @@
+# RBI Saathi backend runtime and test dependencies.
+# Install inside the project's virtual environment with: python -m pip install -r requirements.txt
+
+fastapi>=0.115
+uvicorn[standard]>=0.30
+SQLAlchemy>=2.0
+alembic>=1.13
+psycopg[binary]>=3.2
+pgvector>=0.3
+pydantic>=2.8
+pydantic-settings>=2.5
+python-dotenv>=1.0
+sentence-transformers>=3.0
+PyMuPDF>=1.24
+requests>=2.32
+httpx>=0.27
+pytest>=8.0
