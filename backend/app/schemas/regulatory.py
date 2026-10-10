@@ -22,6 +22,7 @@ class RegulatoryDocumentResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: int
+    title: str
     rbi_reference: str | None = None
     source_file: str | None = None
     source_url: str | None = None

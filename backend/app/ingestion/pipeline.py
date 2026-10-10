@@ -74,6 +74,7 @@ def persist_document(
     *,
     dry_run: bool = False,
     page_count: int | None = None,
+    source_url: str | None = None,
 ) -> IngestionResult:
     pdf_path = Path(pdf_path)
     source_file = pdf_path.name
@@ -123,7 +124,7 @@ def persist_document(
                 rbi_reference=profile.rbi_reference,
                 publication_date=profile.publication_date,
                 department=profile.department,
-                source_url=None,
+                source_url=source_url,
                 source_file=source_file,
                 language=profile.language,
                 description=profile.description,

@@ -28,7 +28,11 @@ DESCRIPTION = (
 )
 
 
-def build_regulatory_document(pdf_path: str | Path):
+def build_regulatory_document(
+    pdf_path: str | Path,
+    *,
+    source_url: str | None = None,
+):
     pdf_path = Path(pdf_path)
 
     pages = extract_pdf_pages(pdf_path)
@@ -40,7 +44,7 @@ def build_regulatory_document(pdf_path: str | Path):
         "rbi_reference": RBI_REFERENCE,
         "publication_date": PUBLICATION_DATE,
         "department": DEPARTMENT,
-        "source_url": None,
+        "source_url": source_url,
         "source_file": pdf_path.name,
         "language": LANGUAGE,
         "description": DESCRIPTION,
@@ -52,11 +56,14 @@ def build_regulatory_document(pdf_path: str | Path):
 def ingest_regulatory_pdf(
     pdf_path: str | Path,
     *,
+    source_url: str | None = None,
     dry_run: bool = False,
 ):
     pdf_path = Path(pdf_path)
 
-    document_data, chunks = build_regulatory_document(pdf_path)
+    document_data, chunks = build_regulatory_document(
+        pdf_path, source_url=source_url
+    )
 
     print("Document")
     print(f"  title: {document_data['title']}")
@@ -64,6 +71,7 @@ def ingest_regulatory_pdf(
     print(f"  RBI reference: {document_data['rbi_reference']}")
     print(f"  publication date: {document_data['publication_date']}")
     print(f"  source file: {document_data['source_file']}")
+    print(f"  source URL: {document_data['source_url'] or 'UNVERIFIED / NOT SET'}")
     print(f"  chunks: {len(chunks)}")
 
     if dry_run:
@@ -129,6 +137,11 @@ def main():
     )
 
     parser.add_argument("pdf_path")
+    parser.add_argument(
+        "--source-url",
+        default=None,
+        help="Verified official RBI source URL for this PDF.",
+    )
 
     parser.add_argument(
         "--dry-run",
@@ -140,6 +153,7 @@ def main():
 
     ingest_regulatory_pdf(
         args.pdf_path,
+        source_url=args.source_url,
         dry_run=args.dry_run,
     )
 

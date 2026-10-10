@@ -52,6 +52,7 @@ def ingest_profiled_pdf(
         chunks,
         dry_run=dry_run,
         page_count=len(pages),
+        source_url=getattr(profile, 'source_url', None),
     )
 
 
