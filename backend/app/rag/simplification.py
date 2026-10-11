@@ -7,7 +7,7 @@ from pydantic import BaseModel, Field
 from app.core.config import get_settings
 from app.llm.service import get_llm_provider
 from app.rag.context import build_context
-from app.retrieval.service import retrieve_chunks
+from app.retrieval.service import retrieve_chunks, retrieve_document_chunks
 
 
 class TerminologyItem(BaseModel):
@@ -162,6 +162,7 @@ simplification, return:
 def simplify_regulation(
     question: str,
     top_k: int | None = None,
+    document_id: int | None = None,
 ) -> RegulatorySimplificationResponse:
     question = question.strip()
 
@@ -171,10 +172,16 @@ def simplify_regulation(
     settings = get_settings()
     effective_top_k = top_k or 5
 
-    results = retrieve_chunks(
-        question,
-        top_k=effective_top_k,
-    )
+    if document_id is not None:
+        results = retrieve_document_chunks(
+            document_id=document_id,
+            top_k=effective_top_k,
+        )
+    else:
+        results = retrieve_chunks(
+            question,
+            top_k=effective_top_k,
+        )
 
     if not results:
         return RegulatorySimplificationResponse(
@@ -195,6 +202,12 @@ def simplify_regulation(
         )
 
     context = build_context(results)
+    if document_id is not None:
+        # Keep the target document identity explicit for scoped simplification.
+        context = (
+            f"Target document: {results[0].document_title}\\n\\n"
+            f"{context}"
+        )
 
     prompt = _build_prompt(
         question=question,

@@ -1,12 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import GoogleTranslate from "./GoogleTranslate";
+import { useSettings } from "../context/SettingsContext";
 import "../styles/Header.css";
 
 function Header() {
   const [profileOpen, setProfileOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
 
-  const [selectedLanguage, setSelectedLanguage] = useState("English");
+  const { language, setLanguage } = useSettings();
+  const selectedLanguage = language === "Marathi" ? "मराठी" : language === "Hindi" ? "हिंदी" : "English";
 
   const profileRef = useRef(null);
   const languageRef = useRef(null);
@@ -31,57 +33,10 @@ function Header() {
     };
   }, []);
 
-  // ==========================================
-  // GET CURRENT GOOGLE TRANSLATE LANGUAGE
-  // ==========================================
-  useEffect(() => {
-    const cookies = document.cookie.split(";");
-
-    const translateCookie = cookies.find((cookie) =>
-      cookie.trim().startsWith("googtrans="),
-    );
-
-    if (translateCookie) {
-      const value = translateCookie.split("=")[1]?.trim();
-
-      if (value?.includes("/mr")) {
-        setSelectedLanguage("मराठी");
-      } else if (value?.includes("/hi")) {
-        setSelectedLanguage("हिंदी");
-      } else {
-        setSelectedLanguage("English");
-      }
-    }
-  }, []);
-
-  // CHANGE LANGUAGE
-
-  const changeLanguage = (language, languageName) => {
-    setSelectedLanguage(languageName);
+  // The header and Settings page share one persisted language preference.
+  const changeLanguage = (languageCode) => {
+    setLanguage(languageCode);
     setLanguageOpen(false);
-
-    // ENGLISH
-    if (language === "en") {
-      // Remove Google Translate cookie
-      document.cookie =
-        "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
-
-      // Reload page
-      window.location.reload();
-
-      return;
-    }
-
-    // MARATHI / HINDI
-
-    document.cookie = `googtrans=/en/${language}; path=/;`;
-
-    document.cookie = `googtrans=/en/${language}; path=/; domain=${window.location.hostname};`;
-
-    // Reload page to apply translation
-    window.location.reload();
   };
 
   // LOGOUT
@@ -131,7 +86,7 @@ function Header() {
                 {/* English */}
                 <button
                   type="button"
-                  onClick={() => changeLanguage("en", "English")}
+                  onClick={() => changeLanguage("en")}
                 >
                   <span>🇬🇧</span>
                   <span>English</span>
@@ -140,7 +95,7 @@ function Header() {
                 {/* Marathi */}
                 <button
                   type="button"
-                  onClick={() => changeLanguage("mr", "मराठी")}
+                  onClick={() => changeLanguage("mr")}
                 >
                   <span>🇮🇳</span>
                   <span>मराठी</span>
@@ -149,7 +104,7 @@ function Header() {
                 {/* Hindi */}
                 <button
                   type="button"
-                  onClick={() => changeLanguage("hi", "हिंदी")}
+                  onClick={() => changeLanguage("hi")}
                 >
                   <span>🇮🇳</span>
                   <span>हिंदी</span>

@@ -15,6 +15,24 @@ function formatDate(dateString) {
   });
 }
 
+function splitHistoricalSummary(summary) {
+  const marker = "Historical source note — ";
+  if (typeof summary !== "string" || !summary.startsWith(marker)) {
+    return { historicalNote: "", summary: summary || "" };
+  }
+
+  const separator = "\n\n";
+  const separatorIndex = summary.indexOf(separator);
+  if (separatorIndex < 0) {
+    return { historicalNote: summary, summary: "" };
+  }
+
+  return {
+    historicalNote: summary.slice(0, separatorIndex),
+    summary: summary.slice(separatorIndex + separator.length),
+  };
+}
+
 function RegulatoryDetails() {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -94,6 +112,7 @@ function RegulatoryDetails() {
   }
 
   const simplification = update.simplification;
+  const summaryParts = splitHistoricalSummary(simplification?.executive_summary);
 
   return (
     <div className="regulatory-details-page">
@@ -133,7 +152,13 @@ function RegulatoryDetails() {
         <section className="details-section">
           <h2>Overview</h2>
 
-          <p>{simplification.executive_summary}</p>
+          {summaryParts.historicalNote && (
+            <div className="historical-source-note" role="note">
+              <strong>Historical source</strong>
+              <p>{summaryParts.historicalNote}</p>
+            </div>
+          )}
+          <p>{summaryParts.summary}</p>
         </section>
 
         {/* What Changed */}
@@ -218,7 +243,7 @@ function RegulatoryDetails() {
               {update.document.source_file || "Not specified"}
             </div>
 
-            {update.document.source_url && (
+            {update.document.source_url ? (
               <div style={{ marginTop: "8px" }}>
                 <a
                   href={update.document.source_url}
@@ -228,6 +253,10 @@ function RegulatoryDetails() {
                   View RBI Source
                 </a>
               </div>
+            ) : (
+              <p className="source-link-unavailable">
+                Official source link is not available in this record.
+              </p>
             )}
           </section>
         )}

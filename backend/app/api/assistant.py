@@ -1,4 +1,6 @@
 from fastapi import APIRouter, HTTPException
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 from app.rag.schemas import RAGAnswer
@@ -21,14 +23,26 @@ class AssistantQueryRequest(BaseModel):
         ge=1,
         le=10,
     )
+    role: Literal[
+        "bank_employee",
+        "compliance_officer",
+        "branch_manager",
+        "customer_support",
+    ] = "bank_employee"
 
 
 @router.post("/query", response_model=RAGAnswer)
 def query_assistant(request: AssistantQueryRequest) -> RAGAnswer:
     try:
+        if request.role == "bank_employee":
+            return answer_question(
+                question=request.question,
+                top_k=request.top_k,
+            )
         return answer_question(
             question=request.question,
             top_k=request.top_k,
+            role=request.role,
         )
     except ValueError as exc:
         raise HTTPException(

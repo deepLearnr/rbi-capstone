@@ -5,6 +5,25 @@ import "../styles/AskSaathi.css";
 function AskSaathi() {
   const navigate = useNavigate();
   const [question, setQuestion] = useState("");
+  const [role, setRole] = useState(() => {
+    const saved = localStorage.getItem("rbiSaathiRole");
+    return ["bank_employee", "compliance_officer", "branch_manager", "customer_support"].includes(saved)
+      ? saved
+      : "bank_employee";
+  });
+
+  const roleOptions = [
+    { value: "bank_employee", label: "Bank employee" },
+    { value: "compliance_officer", label: "Compliance officer" },
+    { value: "branch_manager", label: "Branch manager" },
+    { value: "customer_support", label: "Customer support" },
+  ];
+
+  const handleRoleChange = (event) => {
+    const nextRole = event.target.value;
+    setRole(nextRole);
+    localStorage.setItem("rbiSaathiRole", nextRole);
+  };
 
   const suggestedQuestions = [
     {
@@ -59,6 +78,7 @@ function AskSaathi() {
     navigate("/ask-answer", {
       state: {
         question: finalQuestion,
+        role,
       },
     });
   };
@@ -78,6 +98,25 @@ function AskSaathi() {
         <p className="ask-description">
           Ask about banking, regulations or learning.
         </p>
+
+        <div style={{ margin: "0 auto 1rem", maxWidth: "34rem", textAlign: "left" }}>
+          <label htmlFor="assistant-role" style={{ display: "block", marginBottom: "0.4rem", fontWeight: 600 }}>
+            Answer perspective
+          </label>
+          <select
+            id="assistant-role"
+            value={role}
+            onChange={handleRoleChange}
+            style={{ width: "100%", padding: "0.75rem", borderRadius: "0.5rem" }}
+          >
+            {roleOptions.map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </select>
+          <p style={{ margin: "0.4rem 0 0", fontSize: "0.85rem" }}>
+            This changes the explanation's framing, not RBI requirements or evidence standards.
+          </p>
+        </div>
 
         {/* Question Input */}
         <div className="question-input-wrapper">

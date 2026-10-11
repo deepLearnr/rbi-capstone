@@ -33,7 +33,27 @@ The write path validates metadata and official HTTPS URLs, downloads only eligib
 
 After a successful write, verify the reported document ID and chunk count in the database and test retrieval through `/api/assistant/query`. A dry-run is not evidence that a document was persisted or indexed.
 
-## 3. Safety and limitations
+
+## 3. Create Regulatory Updates from ingested circulars
+
+Ingestion intentionally stores the verified source document and its chunks without automatically generating an AI summary. After checking that the source is retrievable, generate update records in a separate step from the backend directory:
+
+```bash
+python -m app.ingestion.publish_discovered_updates
+```
+
+This is a dry-run by default. It uses the LLM to simplify only the selected circular's own embedded chunks, verifies that the simplification is supported and cites the same document, and reports which updates are ready. It does not write to the database unless `--write` is supplied.
+
+After reviewing the dry-run output, persist eligible records with:
+
+```bash
+python -m app.ingestion.publish_discovered_updates --write
+```
+
+Documents with insufficient evidence, missing citations, or mismatched citation metadata are skipped. Existing `RegulatoryUpdate` records are excluded from subsequent runs, so rerunning the command does not intentionally create duplicates. If simplification fails, the ingested source document remains available for retrieval.
+
+
+## 4. Safety and limitations
 
 - Only HTTPS URLs on the explicit RBI host allowlist are accepted.
 - Redirects and content size are checked.
@@ -43,7 +63,7 @@ After a successful write, verify the reported document ID and chunk count in the
 - An official RBI page does not establish whether a circular remains in force.
 - If title, reference, date, or content cannot be verified, do not override the checks manually just to make ingestion succeed.
 
-## 4. Report-only discovery
+## 5. Report-only discovery
 
 For candidate reports without database writes:
 

@@ -80,14 +80,45 @@ ANSWER:
 """
 
 
+ROLE_GUIDANCE = {
+    "bank_employee": (
+        "Frame practical next steps for a bank employee carrying out "
+        "customer-facing or operational work. Highlight checks and escalation "
+        "only when supported by the source."
+    ),
+    "compliance_officer": (
+        "Frame the explanation for a compliance officer reviewing controls, "
+        "interpretation, and evidence. Identify review or escalation points "
+        "only when supported by the source."
+    ),
+    "branch_manager": (
+        "Frame the explanation for a branch manager overseeing staff and "
+        "branch-level implementation. Do not invent management duties."
+    ),
+    "customer_support": (
+        "Frame the explanation for customer-support staff communicating "
+        "clearly with customers. Explain only what the source supports; "
+        "do not disclose internal-only details or invent customer-facing promises."
+    ),
+}
+
+
 def build_rag_prompt(
     question: str,
     results: list[RetrievedChunk],
+    role: str = "bank_employee",
 ) -> str:
     context = build_context(results)
+    role_guidance = ROLE_GUIDANCE.get(role, ROLE_GUIDANCE["bank_employee"])
 
     return f"""
 {SYSTEM_INSTRUCTION}
+
+ROLE-SPECIFIC PRESENTATION GUIDANCE:
+{role_guidance}
+
+Role guidance changes only the explanation's framing. It does not change the source evidence standard, create new obligations, or authorize assumptions.
+
 
 USER QUESTION:
 {question}

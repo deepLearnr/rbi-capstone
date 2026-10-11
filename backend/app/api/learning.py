@@ -8,13 +8,20 @@ from app.models.assessment import Assessment
 from app.models.assessment_attempt import AssessmentAttempt
 from app.models.learning_module import LearningModule
 from app.models.learning_progress import LearningProgress
-from app.schemas.learning import AssessmentSubmitRequest, ProgressUpdateRequest
+from app.schemas.learning import (
+    AssessmentSubmitRequest, ProgressUpdateRequest, SectionProgressUpdateRequest,
+)
+from app.services.learning_progress import calculate_section_progress, update_completed_sections
 from app.services.learning_scoring import score_assessment
 
 router = APIRouter(prefix="/api/learning", tags=["Learning and Assessments"])
 
 
 def _module_summary(module, progress=None):
+    completed_section_ids = (progress.completed_section_ids or []) if progress else []
+    # Preserve legacy demo records created by the old one-click completion UI.
+    if progress and progress.completed and not completed_section_ids:
+        completed_section_ids = [section.id for section in module.sections]
     return {
         "id": module.id,
         "title": module.title,
@@ -154,6 +161,65 @@ def update_module_progress(
         "module_id": progress.module_id,
         "progress_percent": progress.progress_percent,
         "completed": progress.completed,
+        "updated_at": progress.updated_at.isoformat(),
+    }
+
+
+@router.post("/modules/{module_id}/sections/{section_id}/progress")
+def update_section_progress(
+    module_id: int,
+    section_id: int,
+    payload: SectionProgressUpdateRequest,
+    db: Session = Depends(get_db),
+):
+    module = (
+        db.query(LearningModule)
+        .options(joinedload(LearningModule.sections))
+        .filter(
+            LearningModule.id == module_id,
+            LearningModule.status == "published",
+        )
+        .first()
+    )
+    if module is None:
+        raise HTTPException(status_code=404, detail="Learning module not found.")
+
+    if not any(section.id == section_id for section in module.sections):
+        raise HTTPException(status_code=404, detail="Learning section not found in this module.")
+
+    progress = (
+        db.query(LearningProgress)
+        .filter(LearningProgress.module_id == module_id)
+        .one_or_none()
+    )
+    if progress is None:
+        progress = LearningProgress(module_id=module_id)
+        db.add(progress)
+
+    existing_ids = progress.completed_section_ids or []
+    if progress.completed and not existing_ids:
+        # Legacy completed records came from an explicit "Mark module complete"
+        # action; map them to all current sections so a later uncheck is meaningful.
+        existing_ids = [section.id for section in module.sections]
+    completed_ids = update_completed_sections(
+        existing_ids, section_id, payload.completed
+    )
+    # Only IDs belonging to this module count toward completion.
+    valid_section_ids = {section.id for section in module.sections}
+    completed_ids = [value for value in completed_ids if value in valid_section_ids]
+    progress.completed_section_ids = completed_ids
+    progress.progress_percent = calculate_section_progress(
+        completed_ids, len(module.sections)
+    )
+    progress.completed = bool(module.sections) and len(completed_ids) == len(module.sections)
+    progress.updated_at = datetime.utcnow()
+    db.commit()
+    db.refresh(progress)
+    return {
+        "module_id": progress.module_id,
+        "progress_percent": progress.progress_percent,
+        "completed": progress.completed,
+        "completed_section_ids": progress.completed_section_ids or [],
         "updated_at": progress.updated_at.isoformat(),
     }
 

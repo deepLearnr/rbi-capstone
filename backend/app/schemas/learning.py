@@ -21,3 +21,8 @@ class LearningSectionOut(BaseModel):
     title: str
     content: str
     section_order: int
+
+
+
+class SectionProgressUpdateRequest(BaseModel):
+    completed: bool

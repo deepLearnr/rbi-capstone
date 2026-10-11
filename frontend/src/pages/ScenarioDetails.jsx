@@ -1,4 +1,9 @@
 import React, { useState } from "react";
+import {
+  getScenarioSession,
+  saveScenarioSession,
+  saveScenarioAttempt,
+} from "../services/scenarioProgress";
 import { useNavigate, useParams } from "react-router-dom";
 import "../styles/ScenarioDetails.css";
 
@@ -99,12 +104,20 @@ function ScenarioDetails() {
     },
   ];
 
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [selectedAnswer, setSelectedAnswer] = useState(null);
-  const [submitted, setSubmitted] = useState(false);
-  const [score, setScore] = useState(0);
-  const [completed, setCompleted] = useState(false);
-  const [answers, setAnswers] = useState([]);
+  const savedSession = getScenarioSession(id);
+  const [currentQuestion, setCurrentQuestion] = useState(
+    savedSession?.currentQuestion ?? 0,
+  );
+  const [selectedAnswer, setSelectedAnswer] = useState(
+    savedSession?.selectedAnswer ?? null,
+  );
+  const [submitted, setSubmitted] = useState(savedSession?.submitted ?? false);
+  const [score, setScore] = useState(savedSession?.score ?? 0);
+  const [completed, setCompleted] = useState(savedSession?.completed ?? false);
+  const [answers, setAnswers] = useState(savedSession?.answers ?? []);
+  const [reviewing, setReviewing] = useState(false);
+
+  const persistSession = (session) => saveScenarioSession(id, session);
 
   const question = questions[currentQuestion];
 
@@ -115,32 +128,70 @@ function ScenarioDetails() {
 
     const isCorrect = selectedAnswer === question.correctAnswer;
 
-    if (isCorrect) {
-      setScore((prev) => prev + 1);
-    }
-
-    setAnswers((prev) => [
-      ...prev,
+    const nextScore = score + (isCorrect ? 1 : 0);
+    const nextAnswers = [
+      ...answers,
       {
         question: currentQuestion + 1,
+        title: question.title,
         selected: selectedAnswer,
+        selectedText: question.options[selectedAnswer],
         correct: question.correctAnswer,
+        correctText: question.options[question.correctAnswer],
         isCorrect,
       },
-    ]);
+    ];
 
+    setScore(nextScore);
+    setAnswers(nextAnswers);
     setSubmitted(true);
+    persistSession({
+      currentQuestion,
+      selectedAnswer,
+      submitted: true,
+      score: nextScore,
+      completed: false,
+      answers: nextAnswers,
+    });
   };
 
   const handleNext = () => {
     if (currentQuestion === questions.length - 1) {
+      const attempt = {
+        id: `${id}-${Date.now()}`,
+        scenarioId: String(id),
+        score,
+        totalQuestions: questions.length,
+        scorePercent: Math.round((score / questions.length) * 100),
+        answers,
+        completedAt: new Date().toISOString(),
+      };
+      saveScenarioAttempt(attempt);
       setCompleted(true);
+      setReviewing(false);
+      persistSession({
+        currentQuestion,
+        selectedAnswer,
+        submitted: true,
+        score,
+        completed: true,
+        answers,
+      });
       return;
     }
 
-    setCurrentQuestion((prev) => prev + 1);
+    const nextQuestion = currentQuestion + 1;
+    setCurrentQuestion(nextQuestion);
     setSelectedAnswer(null);
     setSubmitted(false);
+    persistSession({
+      currentQuestion: nextQuestion,
+      selectedAnswer: null,
+      submitted: false,
+      score,
+      completed: false,
+      answers,
+    });
   };
 
   const handleTryAgain = () => {
@@ -150,10 +201,19 @@ function ScenarioDetails() {
     setScore(0);
     setCompleted(false);
     setAnswers([]);
+    setReviewing(false);
+    persistSession({
+      currentQuestion: 0,
+      selectedAnswer: null,
+      submitted: false,
+      score: 0,
+      completed: false,
+      answers: [],
+    });
   };
 
   const handleReview = () => {
-    alert("Review Answers feature can be connected here.");
+    setReviewing((previous) => !previous);
   };
 
   if (completed) {
@@ -199,9 +259,25 @@ function ScenarioDetails() {
 
           <div className="result-progress-text">{percentage}% Complete</div>
 
+          {reviewing && (
+            <div className="scenario-review-list" role="region" aria-label="Answer review">
+              <h2>Answer Review</h2>
+              {answers.map((answer) => (
+                <div key={answer.question}>
+                  <strong>
+                    {answer.question}. {answer.title || `Question ${answer.question}`}
+                  </strong>
+                  <p>Your answer: {answer.selectedText ?? `Option ${answer.selected + 1}`}</p>
+                  <p>Correct answer: {answer.correctText ?? `Option ${answer.correct + 1}`}</p>
+                  <p>{answer.isCorrect ? "Correct" : "Incorrect"}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
           <div className="result-actions">
             <button className="review-btn" onClick={handleReview}>
-              Review Answers
+              {reviewing ? "Hide Review" : "Review Answers"}
             </button>
 
             <button className="try-again-btn" onClick={handleTryAgain}>
@@ -288,6 +364,14 @@ function ScenarioDetails() {
                 onClick={() => {
                   if (!submitted) {
                     setSelectedAnswer(index);
+                    persistSession({
+                      currentQuestion,
+                      selectedAnswer: index,
+                      submitted: false,
+                      score,
+                      completed: false,
+                      answers,
+                    });
                   }
                 }}
                 disabled={submitted}

@@ -407,3 +407,33 @@
         width: 100%;
     }
 }
+
+/* Historical-source warning and provenance fallback */
+.historical-source-note {
+    margin: 0 0 14px;
+    padding: 12px 14px;
+    border: 1px solid #ead6a4;
+    border-left: 4px solid #b7791f;
+    border-radius: 6px;
+    background: #fffaf0;
+    color: #684b16;
+}
+
+.historical-source-note strong {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 12px;
+}
+
+.details-section .historical-source-note p {
+    max-width: none;
+    color: #684b16;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.source-link-unavailable {
+    margin-top: 8px !important;
+    font-size: 12px !important;
+    color: #777 !important;
+}

@@ -10,6 +10,17 @@ function AskAnswer() {
   const location = useLocation();
 
   const question = location.state?.question || "";
+  const validRoles = ["bank_employee", "compliance_officer", "branch_manager", "customer_support"];
+  const storedRole = localStorage.getItem("rbiSaathiRole");
+  const role = validRoles.includes(location.state?.role)
+    ? location.state.role
+    : validRoles.includes(storedRole) ? storedRole : "bank_employee";
+  const roleLabel = {
+    bank_employee: "Bank employee",
+    compliance_officer: "Compliance officer",
+    branch_manager: "Branch manager",
+    customer_support: "Customer support",
+  }[role];
 
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(Boolean(question));
@@ -40,6 +51,7 @@ function AskAnswer() {
             },
             body: JSON.stringify({
               question: question.trim(),
+              role,
             }),
           },
         );
@@ -84,7 +96,7 @@ function AskAnswer() {
     return () => {
       cancelled = true;
     };
-  }, [question]);
+  }, [question, role]);
 
   const handleFollowUp = () => {
     const nextQuestion = followUp.trim();
@@ -96,6 +108,7 @@ function AskAnswer() {
     navigate("/ask-answer", {
       state: {
         question: nextQuestion,
+        role,
       },
     });
 
@@ -194,7 +207,7 @@ function AskAnswer() {
 
         {/* Assistant */}
         <div className="message assistant-message">
-          <div className="message-label">🤖 Assistant</div>
+          <div className="message-label">🤖 Assistant · {roleLabel} perspective</div>
 
           {loading && (
             <div className="assistant-answer">

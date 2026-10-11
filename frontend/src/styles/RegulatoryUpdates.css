@@ -539,3 +539,32 @@
         padding: 17px;
     }
 }
+
+/* Separate historical-source caveats from the regulatory summary */
+.historical-source-note {
+    margin: 0 0 10px;
+    padding: 9px 11px;
+    border: 1px solid #ead6a4;
+    border-left: 3px solid #b7791f;
+    border-radius: 5px;
+    background: #fffaf0;
+    color: #684b16;
+}
+
+.historical-source-note strong {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 11px;
+}
+
+.important-card .historical-source-note p,
+.regulatory-card .historical-source-note p {
+    margin: 0;
+    color: #684b16;
+    font-size: 11px;
+    line-height: 1.45;
+}
+
+.historical-source-note.compact {
+    margin-bottom: 10px;
+}

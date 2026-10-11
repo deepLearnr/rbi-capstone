@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, DateTime, ForeignKey, Integer
+from sqlalchemy import Boolean, DateTime, ForeignKey, Integer, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.session import Base
@@ -17,6 +17,8 @@ class LearningProgress(Base):
         unique=True,
         index=True,
     )
+
+    completed_section_ids: Mapped[list | None] = mapped_column(JSON, nullable=True, default=list)
 
     progress_percent: Mapped[int] = mapped_column(
         Integer,

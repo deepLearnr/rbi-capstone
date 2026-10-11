@@ -2,10 +2,52 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 const SettingsContext = createContext();
 
+const normalizeLanguage = (value) => {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (normalized === "hi" || normalized === "hindi") return "Hindi";
+  if (normalized === "mr" || normalized === "marathi") return "Marathi";
+  return "English";
+};
+
+const languageCode = (value) =>
+  normalizeLanguage(value) === "Hindi"
+    ? "hi"
+    : normalizeLanguage(value) === "Marathi"
+      ? "mr"
+      : "en";
+
+const applyTranslationLanguage = (value) => {
+  const code = languageCode(value);
+  if (code === "en") {
+    document.cookie =
+      "googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${window.location.hostname};`;
+  } else {
+    document.cookie = `googtrans=/en/${code}; path=/;`;
+    document.cookie =
+      `googtrans=/en/${code}; path=/; domain=${window.location.hostname};`;
+  }
+};
+
 export const SettingsProvider = ({ children }) => {
-  const [language, setLanguage] = useState(
-    localStorage.getItem("language") || "English",
+  const [languageState, setLanguageState] = useState(() =>
+    normalizeLanguage(localStorage.getItem("language")),
   );
+
+  const setLanguage = (value) => {
+    const nextLanguage = normalizeLanguage(value);
+    if (nextLanguage === languageState) return;
+
+    setLanguageState(nextLanguage);
+    localStorage.setItem("language", nextLanguage);
+    document.documentElement.setAttribute("lang", languageCode(nextLanguage));
+    applyTranslationLanguage(nextLanguage);
+
+    // Google Translate reads the googtrans cookie during page initialization.
+    // Reload only after an explicit user selection so the choice is applied.
+    window.location.reload();
+  };
 
   const [appearance, setAppearance] = useState(
     localStorage.getItem("appearance") || "Light",
@@ -22,17 +64,11 @@ export const SettingsProvider = ({ children }) => {
     progress: true,
   });
 
-  // ================= LANGUAGE =================
   useEffect(() => {
-    localStorage.setItem("language", language);
+    localStorage.setItem("language", languageState);
+    document.documentElement.setAttribute("lang", languageCode(languageState));
+  }, [languageState]);
 
-    document.documentElement.setAttribute(
-      "lang",
-      language === "Hindi" ? "hi" : language === "Marathi" ? "mr" : "en",
-    );
-  }, [language]);
-
-  // ================= APPEARANCE =================
   useEffect(() => {
     localStorage.setItem("appearance", appearance);
 
@@ -50,15 +86,12 @@ export const SettingsProvider = ({ children }) => {
   return (
     <SettingsContext.Provider
       value={{
-        language,
+        language: languageState,
         setLanguage,
-
         appearance,
         setAppearance,
-
         notifications,
         setNotifications,
-
         preferences,
         setPreferences,
       }}
@@ -69,5 +102,9 @@ export const SettingsProvider = ({ children }) => {
 };
 
 export const useSettings = () => {
-  return useContext(SettingsContext);
+  const context = useContext(SettingsContext);
+  if (!context) {
+    throw new Error("useSettings must be used inside SettingsProvider");
+  }
+  return context;
 };

@@ -1,0 +1,19 @@
+RBI Saathi frontend role integration patch
+
+Files:
+- frontend/src/pages/AskSaathi.jsx
+- frontend/src/pages/AskAnswer.jsx
+
+Adds a persisted answer-perspective selector for bank employee, compliance officer,
+branch manager, and customer support. Carries the selected role into the answer route,
+sends it to POST /api/assistant/query, and preserves it for follow-up questions.
+The UI states that role affects framing only, not regulatory requirements or evidence
+standards. No CSS files are changed.
+
+Apply from repository root:
+  unzip -o ~/Downloads/rbi-saathi-frontend-role-integration-patch.zip -d .
+  cd frontend
+  npm run build
+  npm run lint
+
+This patch expects the backend role support from rbi-saathi-role-guidance-patch-v2.

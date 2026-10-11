@@ -96,6 +96,7 @@ def parse_evidence_response(response: str) -> tuple[
 def answer_question(
     question: str,
     top_k: int | None = None,
+    role: str = "bank_employee",
 ) -> RAGAnswer:
     question = question.strip()
 
@@ -120,10 +121,12 @@ def answer_question(
             evidence_status="insufficient",
         )
 
-    prompt = build_rag_prompt(
-        question=question,
-        results=results,
-    )
+    # Keep the legacy two-argument prompt call for default-role callers and
+    # existing integrations; role-aware requests get explicit framing guidance.
+    if role == "bank_employee":
+        prompt = build_rag_prompt(question=question, results=results)
+    else:
+        prompt = build_rag_prompt(question=question, results=results, role=role)
 
     provider = get_llm_provider()
     raw_response = provider.generate(prompt)

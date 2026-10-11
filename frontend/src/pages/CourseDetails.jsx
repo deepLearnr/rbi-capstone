@@ -8,10 +8,28 @@ function CourseDetails() {
   const navigate = useNavigate();
   const [module, setModule] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [savingSectionId, setSavingSectionId] = useState(null);
   const [error, setError] = useState("");
 
   const loadModule = () => learningApi.module(id).then(setModule);
+
+  const toggleSection = async (sectionId, completed) => {
+    try {
+      setSavingSectionId(sectionId);
+      setError("");
+      const progress = await learningApi.updateSectionProgress(id, sectionId, completed);
+      setModule((current) => current ? {
+        ...current,
+        progress_percent: progress.progress_percent,
+        completed: progress.completed,
+        completed_section_ids: progress.completed_section_ids,
+      } : current);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSavingSectionId(null);
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -20,20 +38,10 @@ function CourseDetails() {
       .finally(() => setLoading(false));
   }, [id]);
 
-  const markComplete = async () => {
-    try {
-      setSaving(true);
-      await learningApi.updateProgress(id, 100);
-      await loadModule();
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setSaving(false);
-    }
-  };
+
 
   if (loading) return <div className="learning-flow-page"><p>Loading module…</p></div>;
-  if (error || !module) return (
+  if (!module) return (
     <div className="learning-flow-page">
       <button className="learning-flow-link" onClick={() => navigate("/learning")}>← Learning paths</button>
       <p className="learning-flow-error" role="alert">{error || "Module not found."}</p>
@@ -52,21 +60,31 @@ function CourseDetails() {
         </p>
       </header>
 
+      {error && <p className="learning-flow-error" role="alert">{error}</p>}
       <section className="learning-flow-section">
         <h2>Learning sections</h2>
         {module.sections.map((section) => (
           <article className="learning-flow-panel" key={section.id}>
             <h3>{section.section_order}. {section.title}</h3>
             <p>{section.content}</p>
+            <label>
+              <input
+                type="checkbox"
+                checked={(module.completed_section_ids || []).includes(section.id)}
+                disabled={savingSectionId === section.id}
+                onChange={(event) => toggleSection(section.id, event.target.checked)}
+              />{" "}
+              {savingSectionId === section.id
+                ? "Saving progress…"
+                : "I’ve completed this section"}
+            </label>
           </article>
         ))}
-        <button
-          className="learning-flow-button"
-          onClick={markComplete}
-          disabled={saving || module.completed}
-        >
-          {saving ? "Saving…" : module.completed ? "Module completed ✓" : "Mark module complete"}
-        </button>
+        <p className="learning-flow-progress-label" role="status">
+          {module.completed
+            ? "All sections completed ✓"
+            : "Complete each section to update your saved progress."}
+        </p>
       </section>
 
       <section className="learning-flow-section">

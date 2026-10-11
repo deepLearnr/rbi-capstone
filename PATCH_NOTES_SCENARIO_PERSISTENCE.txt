@@ -1,0 +1,24 @@
+# RBI Saathi — scenario persistence patch
+
+## What changed
+- Saves the active scenario session in browser local storage: current question, selected answer, submitted state, running score, and answer review data.
+- Restores an in-progress or completed scenario after a page refresh in the same browser.
+- Saves a completed-attempt history and calculates the Scenarios page's performance card from real saved attempts instead of a hard-coded 82%.
+- Implements the Review Answers button using the saved attempt answers.
+- Keeps the quiz usable if browser storage is unavailable.
+
+## Persistence scope
+This is browser-local persistence, not server/database persistence. It survives reloads in the same browser profile but does not sync between browsers/devices or authenticated users. The app currently has no authenticated learner identity. The UI must not describe these records as cloud-saved.
+
+## Files
+- `frontend/src/services/scenarioProgress.js` (new)
+- `frontend/src/pages/ScenarioDetails.jsx`
+- `frontend/src/pages/Scenarios.jsx`
+
+No CSS files changed. No database migration required.
+
+## Verification performed for this patch
+- `node --check frontend/src/services/scenarioProgress.js`: passed.
+- Node helper checks: 4 passed (session save/restore, attempt save, duplicate prevention, and calculated performance).
+- Full Vite build/lint were not run in this isolated patch workspace because the repository's frontend dependencies were not included in the uploaded source archive. Run them in the actual project after applying the patch.
+- Backend files are unchanged; the existing backend test count is not a test of this frontend-only change.

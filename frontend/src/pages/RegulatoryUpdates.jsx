@@ -15,6 +15,24 @@ function formatDate(dateString) {
   });
 }
 
+function splitHistoricalSummary(summary) {
+  const marker = "Historical source note — ";
+  if (typeof summary !== "string" || !summary.startsWith(marker)) {
+    return { historicalNote: "", summary: summary || "" };
+  }
+
+  const separator = "\n\n";
+  const separatorIndex = summary.indexOf(separator);
+  if (separatorIndex < 0) {
+    return { historicalNote: summary, summary: "" };
+  }
+
+  return {
+    historicalNote: summary.slice(0, separatorIndex),
+    summary: summary.slice(separatorIndex + separator.length),
+  };
+}
+
 function RegulatoryUpdates() {
   const navigate = useNavigate();
 
@@ -141,10 +159,22 @@ function RegulatoryUpdates() {
 
             <h3>{importantUpdate.title}</h3>
 
-            <p>
-              {importantUpdate.simplification?.executive_summary ||
-                "Regulatory update available."}
-            </p>
+            {(() => {
+              const parts = splitHistoricalSummary(
+                importantUpdate.simplification?.executive_summary,
+              );
+              return (
+                <>
+                  {parts.historicalNote && (
+                    <div className="historical-source-note compact" role="note">
+                      <strong>Historical source</strong>
+                      <p>{parts.historicalNote}</p>
+                    </div>
+                  )}
+                  <p>{parts.summary || "Regulatory update available."}</p>
+                </>
+              );
+            })()}
 
             <div className="important-bottom">
               <span className="update-date">
@@ -193,10 +223,22 @@ function RegulatoryUpdates() {
 
                 <h3>{update.title}</h3>
 
-                <p>
-                  {update.simplification?.executive_summary ||
-                    "Regulatory update available."}
-                </p>
+                {(() => {
+                  const parts = splitHistoricalSummary(
+                    update.simplification?.executive_summary,
+                  );
+                  return (
+                    <>
+                      {parts.historicalNote && (
+                        <div className="historical-source-note compact" role="note">
+                          <strong>Historical source</strong>
+                          <p>{parts.historicalNote}</p>
+                        </div>
+                      )}
+                      <p>{parts.summary || "Regulatory update available."}</p>
+                    </>
+                  );
+                })()}
 
                 <div className="card-bottom">
                   <span className="update-date">

@@ -69,3 +69,49 @@ def retrieve_chunks(
             )
 
         return retrieved
+
+
+
+def retrieve_document_chunks(
+    document_id: int,
+    top_k: int = 10,
+) -> list[RetrievedChunk]:
+    """Return embedded chunks for one known document in source order.
+
+    This targeted path is used when creating a simplification for a specific
+    ingested circular, so evidence from another document cannot be mixed in.
+    """
+    with SessionLocal() as session:
+        statement = (
+            select(DocumentChunk)
+            .options(joinedload(DocumentChunk.document))
+            .where(
+                DocumentChunk.document_id == document_id,
+                DocumentChunk.embedding.is_not(None),
+            )
+            .order_by(DocumentChunk.chunk_index)
+            .limit(top_k)
+        )
+        chunks = session.execute(statement).scalars().all()
+        retrieved = []
+
+        for chunk in chunks:
+            document = chunk.document
+            metadata = chunk.chunk_metadata or {}
+            retrieved.append(
+                RetrievedChunk(
+                    chunk=chunk,
+                    document_title=document.title,
+                    rbi_reference=document.rbi_reference,
+                    source_url=document.source_url,
+                    source_file=document.source_file,
+                    page_start=chunk.page_start,
+                    page_end=chunk.page_end,
+                    section_reference=chunk.section_reference,
+                    heading=chunk.heading,
+                    distance=0.0,
+                    regulatory_status=metadata.get("regulatory_status"),
+                )
+            )
+
+        return retrieved

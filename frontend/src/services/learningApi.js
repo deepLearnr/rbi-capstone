@@ -26,6 +26,11 @@ export const learningApi = {
       method: "POST",
       body: JSON.stringify({ progress_percent }),
     }),
+  updateSectionProgress: (moduleId, sectionId, completed) =>
+    request(`/api/learning/modules/${moduleId}/sections/${sectionId}/progress`, {
+      method: "POST",
+      body: JSON.stringify({ completed }),
+    }),
   assessments: () => request("/api/learning/assessments"),
   assessment: (id) => request(`/api/learning/assessments/${id}`),
   submitAssessment: (id, answers) =>

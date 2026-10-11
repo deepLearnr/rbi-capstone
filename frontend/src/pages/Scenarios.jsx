@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/Scenarios.css";
+import { getScenarioPerformance } from "../services/scenarioProgress";
 
 function Scenarios() {
   const navigate = useNavigate();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+  const performance = getScenarioPerformance();
 
   const categories = [
     "All",
@@ -173,7 +175,14 @@ function Scenarios() {
                 <h3>My Performance</h3>
 
                 <div className="performance-score">
-                  Score: <strong>82%</strong>
+                  {performance.attempts > 0 ? (
+                    <>
+                      Average score: <strong>{performance.averageScore}%</strong>
+                      <p>{performance.attempts} completed attempt(s)</p>
+                    </>
+                  ) : (
+                    <p>No completed attempts yet. Finish a scenario to see your performance.</p>
+                  )}
                 </div>
 
                 <button onClick={() => navigate("/progress")}>View →</button>
