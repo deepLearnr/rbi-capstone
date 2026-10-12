@@ -16,6 +16,17 @@ class Settings(BaseSettings):
 
     retrieval_top_k: int = 3
 
+    # Optional SMTP configuration. Digest delivery is disabled until explicitly
+    # invoked with --send and a recipient is configured.
+    smtp_host: str | None = None
+    smtp_port: int = 587
+    smtp_username: str | None = None
+    smtp_password: str | None = None
+    smtp_from_email: str | None = None
+    daily_digest_to: str | None = None
+    smtp_use_ssl: bool = False
+    smtp_starttls: bool = True
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

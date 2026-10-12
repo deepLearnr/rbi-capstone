@@ -16,6 +16,12 @@ Mark each item only after checking it in the checkout being submitted.
 - [ ] `/health` returns HTTP 200.
 - [ ] `/docs` loads and shows the expected routes.
 
+## Regulatory digest distribution
+- [ ] Digest preview includes stored regulatory updates, dates and official links where verified.
+- [ ] A real email is sent only with explicit `--send` and configured SMTP secrets.
+- [ ] Destination mailbox receipt is verified before claiming delivery.
+- [ ] Daily scheduling limitations and setup are documented in `docs/daily-digest.md`.
+
 ## End-to-end demo
 - [ ] A source document is present in the database with source URL and metadata.
 - [ ] Its chunks exist and have 384-dimensional embeddings.

@@ -1,4 +1,4 @@
-# RBI Saathi demo script (5–7 minutes)
+# RBI Saathi demo script (6–8 minutes)
 
 Use this as a concise live walkthrough. Keep the database and LLM provider ready before presenting.
 
@@ -29,10 +29,16 @@ Use this as a concise live walkthrough. Keep the database and LLM provider ready
 - Complete a short assessment if seeded and available.
 - Show score/progress only if it is actually persisted by the running backend.
 
-## 5. Close with limitations (30 seconds)
+## 5. Demonstrate the regulatory email digest (1 minute)
+- From `backend/`, run `python -m scripts.send_daily_digest --limit 10` to preview the message. Preview mode does not send email.
+- Inspect the titles, dates, simplification fields, and official RBI source URLs; the message explicitly warns that source provenance does not prove current applicability.
+- Only if SMTP has been configured and tested, run `python -m scripts.send_daily_digest --send` and show the received email. Claim delivery only after checking the recipient mailbox. See [daily-digest setup](daily-digest.md).
+- State that scheduling is external to the application and that the digest currently includes the latest stored records, not only records published since the previous delivery.
+
+## 6. Close with limitations (30 seconds)
 - Explain that source-grounded retrieval and conservative uncertainty handling are the core safety goals.
 - Mention that current legal applicability still requires official-source verification.
-- Be transparent that some UI pages are prototype views and not all are connected to live backend services.
+- Be transparent that some UI pages are prototype views, scenario progress is browser-local, and authentication and automatic scheduling are not implemented in the prototype.
 
 ## Backup plan
 If the live LLM provider is unavailable, use `/health`, `/docs`, the discovery dry-run, and the automated test result. Do not fabricate a successful answer or persistence result.
