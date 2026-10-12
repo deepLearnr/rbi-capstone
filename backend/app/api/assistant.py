@@ -1,3 +1,5 @@
+import logging
+
 from fastapi import APIRouter, HTTPException
 from typing import Literal
 
@@ -6,6 +8,8 @@ from pydantic import BaseModel, Field
 from app.rag.schemas import RAGAnswer
 from app.rag.service import answer_question
 
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter(
     prefix="/api/assistant",
@@ -50,6 +54,7 @@ def query_assistant(request: AssistantQueryRequest) -> RAGAnswer:
             detail=str(exc),
         ) from exc
     except Exception as exc:
+        logger.exception("Unexpected failure in assistant query endpoint")
         raise HTTPException(
             status_code=500,
             detail="Unable to process the compliance question.",
