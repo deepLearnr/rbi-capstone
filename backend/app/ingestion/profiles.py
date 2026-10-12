@@ -14,6 +14,7 @@ class DocumentProfile:
     description: str | None = None
     chunker: str = "generic"
     regulatory_status: str | None = None
+    source_url: str | None = None
 
 
 DOCUMENT_PROFILES = {
@@ -34,5 +35,8 @@ DOCUMENT_PROFILES = {
         ),
         chunker="ucb_cyber",
         regulatory_status="withdrawn",
+        source_url=(
+            "https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=11772"
+        ),
     ),
 }

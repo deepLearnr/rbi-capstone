@@ -6,6 +6,7 @@ from sqlalchemy import select
 
 from app.db.session import SessionLocal
 from app.ingestion.pdf_extractor import extract_pdf_pages
+from app.ingestion.regulatory_maintenance import validate_official_rbi_url
 from app.ingestion.regulatory_chunker import chunk_regulatory_pages
 from app.models.document import Document
 from app.models.document_chunk import DocumentChunk
@@ -21,6 +22,9 @@ RBI_REFERENCE = "RBI/2026-27/257"
 PUBLICATION_DATE = date(2026, 9, 18)
 DEPARTMENT = "Department of Regulation"
 LANGUAGE = "en"
+SOURCE_URL = (
+    "https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=13699&Mode=0"
+)
 
 DESCRIPTION = (
     "Reserve Bank of India (Commercial Banks – Know Your Customer) "
@@ -34,6 +38,11 @@ def build_regulatory_document(
     source_url: str | None = None,
 ):
     pdf_path = Path(pdf_path)
+    verified_source_url = (
+        validate_official_rbi_url(source_url)
+        if source_url is not None
+        else SOURCE_URL
+    )
 
     pages = extract_pdf_pages(pdf_path)
     chunks = chunk_regulatory_pages(pages)
@@ -44,7 +53,7 @@ def build_regulatory_document(
         "rbi_reference": RBI_REFERENCE,
         "publication_date": PUBLICATION_DATE,
         "department": DEPARTMENT,
-        "source_url": source_url,
+        "source_url": verified_source_url,
         "source_file": pdf_path.name,
         "language": LANGUAGE,
         "description": DESCRIPTION,
@@ -140,7 +149,10 @@ def main():
     parser.add_argument(
         "--source-url",
         default=None,
-        help="Verified official RBI source URL for this PDF.",
+        help=(
+            "Override the default verified official RBI source URL "
+            "for RBI/2026-27/257."
+        ),
     )
 
     parser.add_argument(

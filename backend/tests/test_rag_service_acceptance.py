@@ -76,6 +76,30 @@ def test_withdrawn_only_evidence_cannot_answer_current_applicability(monkeypatch
     assert "current regulatory applicability" in result.answer.lower()
 
 
+def test_unknown_source_status_cannot_establish_current_applicability(
+    monkeypatch,
+):
+    patch_rag(
+        monkeypatch,
+        [retrieved(10, status=None)],
+        (
+            "EVIDENCE_STATUS: supported\n"
+            "EVIDENCE_IDS: 10\n"
+            "ANSWER: The current CRR requirement is 3.0 percent."
+        ),
+    )
+
+    result = service.answer_question(
+        "What is the current CRR requirement in force today?"
+    )
+
+    assert result.evidence_status == "insufficient"
+    assert result.citations == []
+    assert "does not establish current regulatory applicability" in (
+        result.answer.lower()
+    )
+
+
 def test_historical_answer_with_withdrawn_source_gets_warning(monkeypatch):
     patch_rag(
         monkeypatch,

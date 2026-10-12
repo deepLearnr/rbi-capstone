@@ -1,3 +1,4 @@
+from datetime import date
 from pathlib import Path
 
 from sqlalchemy import select
@@ -7,6 +8,32 @@ from app.ingestion.faq_chunker import chunk_faq_pages
 from app.ingestion.pdf_extractor import extract_pdf_pages
 from app.models.document import Document
 from app.models.document_chunk import DocumentChunk
+
+
+KYC_FAQ_TITLE = "FAQs on Master Direction on KYC dated February 25, 2016"
+KYC_FAQ_PUBLICATION_DATE = date(2025, 6, 9)
+KYC_FAQ_SOURCE_URL = (
+    "https://www.rbi.org.in/commonperson/english/Scripts/FAQs.aspx?Id=3782"
+)
+
+
+def build_faq_document_data(pdf_path: str | Path) -> dict[str, object]:
+    """Return verified document metadata for the June 2025 RBI KYC FAQ."""
+    pdf_path = Path(pdf_path)
+    return {
+        "title": KYC_FAQ_TITLE,
+        "document_type": "faq",
+        "rbi_reference": "Master Direction on KYC",
+        "publication_date": KYC_FAQ_PUBLICATION_DATE,
+        "department": None,
+        "source_url": KYC_FAQ_SOURCE_URL,
+        "source_file": pdf_path.name,
+        "language": "en",
+        "description": (
+            "FAQs on Master Direction on KYC dated February 25, 2016; "
+            "RBI FAQ updated June 9, 2025."
+        ),
+    }
 
 
 def ingest_kcy_faq(pdf_path: str | Path) -> int:
@@ -28,20 +55,7 @@ def ingest_kcy_faq(pdf_path: str | Path) -> int:
                 f"({existing.source_file})"
             )
 
-        document = Document(
-            title="FAQs on Master Direction on KYC dated February 25, 2016",
-            document_type="faq",
-            rbi_reference="Master Direction on KYC",
-            publication_date=None,
-            department=None,
-            source_url=None,
-            source_file=pdf_path.name,
-            language="en",
-            description=(
-                "FAQs on Master Direction on KYC dated "
-                "February 25, 2016 (June 9, 2025)."
-            ),
-        )
+        document = Document(**build_faq_document_data(pdf_path))
 
         db.add(document)
         db.flush()

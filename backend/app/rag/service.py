@@ -21,6 +21,7 @@ CURRENT_APPLICABILITY_PATTERN = re.compile(
 def asks_about_current_applicability(question: str) -> bool:
     return bool(CURRENT_APPLICABILITY_PATTERN.search(question))
 
+
 def parse_evidence_response(response: str) -> tuple[
     Literal["supported", "insufficient"],
     list[int],
@@ -173,31 +174,39 @@ def answer_question(
     withdrawn_citations = [
         citation
         for citation in citations
-        if (citation.regulatory_status or "").strip().lower()
-        == "withdrawn"
+        if (citation.regulatory_status or "").strip().lower() == "withdrawn"
     ]
 
-    has_withdrawn_citation = bool(withdrawn_citations)
-    has_non_withdrawn_citation = any(
-        (citation.regulatory_status or "").strip().lower() != "withdrawn"
-        for citation in citations
-    )
-
-    if (
-        asks_about_current_applicability(question)
-        and has_withdrawn_citation
-        and not has_non_withdrawn_citation
-    ):
-        return RAGAnswer(
-            answer=(
-                "The retrieved evidence includes a document marked "
-                "withdrawn and does not establish current regulatory "
-                "applicability. Please consult the applicable current "
-                "RBI directions before relying on these requirements."
-            ),
-            citations=[],
-            evidence_status="insufficient",
+    # Current applicability requires explicit, recognized status metadata.
+    # Unknown or withdrawn status must not be treated as proof that a
+    # regulation remains in force.
+    verified_current_statuses = {"active"}
+    if asks_about_current_applicability(question):
+        all_citations_verified_current = bool(citations) and all(
+            (citation.regulatory_status or "").strip().lower()
+            in verified_current_statuses
+            for citation in citations
         )
+        if not all_citations_verified_current:
+            if withdrawn_citations:
+                message = (
+                    "The retrieved evidence includes a document marked "
+                    "withdrawn and does not establish current regulatory "
+                    "applicability. Please consult the applicable current "
+                    "RBI directions before relying on these requirements."
+                )
+            else:
+                message = (
+                    "The retrieved evidence does not establish current "
+                    "regulatory applicability. Please consult the applicable "
+                    "current RBI directions before relying on these "
+                    "requirements."
+                )
+            return RAGAnswer(
+                answer=message,
+                citations=[],
+                evidence_status="insufficient",
+            )
 
     if withdrawn_citations and not re.search(
         r"\bwithdrawn\b",
