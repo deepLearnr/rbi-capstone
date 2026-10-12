@@ -1,5 +1,14 @@
 const ATTEMPTS_KEY = "rbi-saathi-scenario-attempts-v1";
-const SESSION_PREFIX = "rbi-saathi-scenario-session-v1:";
+const SESSION_PREFIX = "rbi-saathi-scenario-session-v2:";
+
+// Generate attempt IDs outside React render code so the component remains pure.
+export function createScenarioAttemptId(scenarioId) {
+  const uniqueId =
+    typeof globalThis.crypto?.randomUUID === "function"
+      ? globalThis.crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+  return `${scenarioId}-${uniqueId}`;
+}
 
 function readJson(key, fallback) {
   if (typeof window === "undefined") return fallback;

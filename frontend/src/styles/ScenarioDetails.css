@@ -438,3 +438,12 @@
         width: 100%;
     }
 }
+.scenario-details-page .scenario-storage-note,
+.scenario-result-card .scenario-storage-note {
+    margin-top: 18px;
+    text-align: left;
+}
+
+.scenario-result-card .result-details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}

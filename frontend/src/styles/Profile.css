@@ -741,3 +741,24 @@
         width: 100%;
     }
 }
+.profile-demo-note {
+    margin: 12px 0 0;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+.profile-status {
+    margin: 0 0 14px;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.profile-status[role="alert"] {
+    color: #8a3c27;
+}
+
+.profile-module-progress + .profile-module-progress {
+    margin-top: 20px;
+}

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { learningApi } from "../services/learningApi";
 import "../styles/Profile.css";
 
 function Profile() {
@@ -8,17 +9,38 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false);
 
   const [profile, setProfile] = useState({
-    name: "Employee Name",
-    designation: "Senior Officer",
-    department: "Operations",
-    employeeId: "RBI000123",
-    email: "employee@example.com",
-    phone: "+91 XXXXX XXXXX",
-    branch: "Mumbai",
-    joiningDate: "10 June 2024",
+    name: "Demo Employee",
+    designation: "Not configured",
+    department: "Not configured",
+    employeeId: "Not configured",
+    email: "Not configured",
+    phone: "Not configured",
+    branch: "Not configured",
+    joiningDate: "Not configured",
   });
 
   const [editProfile, setEditProfile] = useState(profile);
+  const [learningProgress, setLearningProgress] = useState(null);
+  const [learningLoading, setLearningLoading] = useState(true);
+  const [learningError, setLearningError] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+    learningApi.progress()
+      .then((data) => {
+        if (isMounted) setLearningProgress(data);
+      })
+      .catch((error) => {
+        if (isMounted) setLearningError(error.message);
+      })
+      .finally(() => {
+        if (isMounted) setLearningLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // ================= EDIT PROFILE =================
 
@@ -53,7 +75,7 @@ function Profile() {
       <div className="profile-header">
         <h1>👤 My Profile</h1>
 
-        <p>Manage your employee information and learning profile</p>
+        <p>Demo profile only. Employee details are local UI state, not connected to an employee directory or saved account.</p>
       </div>
 
       {/* ================= PROFILE SUMMARY ================= */}
@@ -139,107 +161,111 @@ function Profile() {
       <section className="profile-section">
         <h2>📚 Learning Summary</h2>
 
+        {learningLoading && (
+          <p className="profile-status" role="status">Loading learning statistics…</p>
+        )}
+        {learningError && (
+          <p className="profile-status" role="alert">
+            Learning statistics could not be loaded: {learningError}. Values are
+            withheld until the backend responds successfully.
+          </p>
+        )}
+
         <div className="learning-summary-card">
           <div className="learning-summary-stats">
             <div className="learning-stat">
-              <span>Courses Completed</span>
-              <strong>12</strong>
+              <span>Modules Completed</span>
+              <strong>{learningProgress ? learningProgress.modules_completed : "—"}</strong>
             </div>
-
             <div className="learning-stat">
-              <span>Learning Hours</span>
-              <strong>18h</strong>
+              <span>Published Modules</span>
+              <strong>{learningProgress ? learningProgress.module_count : "—"}</strong>
             </div>
-
             <div className="learning-stat">
-              <span>Assessments Average</span>
-              <strong>82%</strong>
+              <span>Assessment Average</span>
+              <strong>
+                {learningProgress && learningProgress.attempts_count > 0
+                  ? `${learningProgress.assessment_average}%`
+                  : "—"}
+              </strong>
             </div>
-
             <div className="learning-stat">
-              <span>Certificates</span>
-              <strong>5</strong>
+              <span>Assessment Attempts</span>
+              <strong>{learningProgress ? learningProgress.attempts_count : "—"}</strong>
             </div>
           </div>
 
-          {/* Current Learning */}
-
-          <div className="current-learning">
-            <h3>Current Learning</h3>
-
-            <div className="current-learning-name">Regulatory Compliance</div>
-
-            <div className="learning-progress-wrapper">
-              <div className="learning-progress-bar">
-                <div
-                  className="learning-progress-fill"
-                  style={{ width: "85%" }}
-                ></div>
-              </div>
-
-              <span>85%</span>
+          {learningProgress && (
+            <div className="current-learning">
+              <h3>Published Module Progress</h3>
+              {learningProgress.modules.length > 0 ? (
+                learningProgress.modules.map((module) => {
+                  const percent = Math.min(
+                    100,
+                    Math.max(0, Number(module.progress_percent) || 0),
+                  );
+                  return (
+                    <div className="profile-module-progress" key={module.module_id}>
+                      <div className="current-learning-name">{module.title}</div>
+                      <div className="learning-progress-wrapper">
+                        <div
+                          className="learning-progress-bar"
+                          role="progressbar"
+                          aria-label={`${module.title} progress`}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          aria-valuenow={percent}
+                        >
+                          <div
+                            className="learning-progress-fill"
+                            style={{ width: `${percent}%` }}
+                          />
+                        </div>
+                        <span>{percent}%</span>
+                      </div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p>No published learning modules are available.</p>
+              )}
+              <button
+                type="button"
+                className="continue-learning-button"
+                onClick={() => navigate("/learning")}
+              >
+                Continue Learning →
+              </button>
             </div>
-
-            <button
-              className="continue-learning-button"
-              onClick={() => navigate("/learning")}
-            >
-              Continue Learning →
-            </button>
-          </div>
+          )}
         </div>
+
+        <p className="profile-demo-note">
+          Metrics come from the backend progress endpoint and represent one shared
+          demo learner because authentication is not implemented. Learning hours
+          and certificate totals are not tracked by this prototype.
+        </p>
       </section>
 
       {/* ================= ACHIEVEMENTS ================= */}
 
       <section className="profile-section">
         <h2>🏆 Achievements</h2>
-
-        <div className="achievement-grid">
-          {/* Compliance */}
-
-          <div className="profile-achievement-card">
-            <div className="profile-achievement-icon">🎓</div>
-
-            <h3>Compliance</h3>
-
-            <p>Certificate</p>
-
-            <span>✓ Earned</span>
+        <div className="learning-summary-card">
+          <div className="current-learning">
+            <h3>Achievement tracking is not available</h3>
+            <p className="profile-demo-note">
+              This prototype does not calculate or persist certificates, badges,
+              or learning streaks. No achievements are presented as earned.
+            </p>
+            <button
+              type="button"
+              className="continue-learning-button"
+              onClick={() => navigate("/progress")}
+            >
+              View learning progress →
+            </button>
           </div>
-
-          {/* Cyber Security */}
-
-          <div className="profile-achievement-card">
-            <div className="profile-achievement-icon">🏅</div>
-
-            <h3>Cyber Security</h3>
-
-            <p>Badge</p>
-
-            <span>✓ Earned</span>
-          </div>
-
-          {/* Learning Streak */}
-
-          <div className="profile-achievement-card">
-            <div className="profile-achievement-icon">🔥</div>
-
-            <h3>7 Day Learning</h3>
-
-            <p>Streak</p>
-
-            <span>✓ Achieved</span>
-          </div>
-        </div>
-
-        <div className="view-achievements-wrapper">
-          <button
-            className="view-achievements-button"
-            onClick={() => navigate("/performance")}
-          >
-            View All Achievements
-          </button>
         </div>
       </section>
 
@@ -320,6 +346,7 @@ function Profile() {
                 value={editProfile.department}
                 onChange={handleChange}
               >
+                <option>Not configured</option>
                 <option>Operations</option>
                 <option>Finance</option>
                 <option>Human Resources</option>

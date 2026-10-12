@@ -361,3 +361,20 @@
         min-height: auto;
     }
 }
+/* Accurate prototype scope and persistence disclosure */
+.scenario-storage-note {
+    margin: 0 0 24px;
+    padding: 12px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #fff;
+    color: #666;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.scenario-category-card .scenario-question-count {
+    margin-top: 12px;
+    color: #572445;
+    font-weight: 600;
+}
