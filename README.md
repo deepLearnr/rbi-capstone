@@ -200,6 +200,15 @@ For the current discovery safeguards and limitations, see [docs/rbi-discovery.md
 
 See interactive API documentation at `/docs` for exact request and response schemas.
 
+## System documentation
+
+- [System architecture](docs/system-architecture.md) — component, RAG, and ingestion diagrams.
+- [Data model / ER diagram](docs/data-model.md) — tables, keys, cardinality, and persistence limitations.
+- [RAG prompt and guardrails](docs/rag-guardrails.md) — prompt rules, citation validation, and current-applicability checks.
+- [API reference](docs/api-reference.md) — routes, request behavior, and prototype boundaries.
+- [Free-hosting assessment](docs/hosting-assessment.md) — provider options, verified limits, and deployment blockers.
+- [Daily digest setup](docs/daily-digest.md) — SMTP configuration and explicit send behavior.
+
 ## Known limitations and honest demo framing
 
 - This is a capstone prototype, not a production compliance platform.
