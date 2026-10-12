@@ -16,6 +16,18 @@ class Settings(BaseSettings):
 
     retrieval_top_k: int = 3
 
+    # Comma-separated list of browser origins allowed to call the API.
+    cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+
+    @property
+    def cors_origin_list(self) -> list[str]:
+        """Return configured CORS origins, trimming whitespace and blanks."""
+        return [
+            origin.strip()
+            for origin in self.cors_origins.split(",")
+            if origin.strip()
+        ]
+
     # Optional SMTP configuration. Digest delivery is disabled until explicitly
     # invoked with --send and a recipient is configured.
     smtp_host: str | None = None

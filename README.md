@@ -207,6 +207,7 @@ See interactive API documentation at `/docs` for exact request and response sche
 - [RAG prompt and guardrails](docs/rag-guardrails.md) — prompt rules, citation validation, and current-applicability checks.
 - [API reference](docs/api-reference.md) — routes, request behavior, and prototype boundaries.
 - [Free-hosting assessment](docs/hosting-assessment.md) — provider options, verified limits, and deployment blockers.
+- [Container deployment](docs/deployment.md) — backend image build, configuration, migrations, and frontend-origin setup.
 - [Daily digest setup](docs/daily-digest.md) — SMTP configuration and explicit send behavior.
 
 ## Known limitations and honest demo framing

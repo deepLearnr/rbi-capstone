@@ -6,6 +6,9 @@ from app.api.circulars import router as circular_router
 from app.api.documents import router as document_router
 from app.api.learning import router as learning_router
 from app.api.regulatory import router as regulatory_router
+from app.core.config import get_settings
+
+settings = get_settings()
 
 app = FastAPI(
     title="RBI Saathi API",
@@ -14,10 +17,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://127.0.0.1:5173",
-    ],
+    allow_origins=settings.cors_origin_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
