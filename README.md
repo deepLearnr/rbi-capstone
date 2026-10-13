@@ -13,7 +13,27 @@ RBI Saathi is a capstone prototype for exploring RBI regulatory material through
 - **Learning and assessment APIs** with module content, assessment attempts, scoring, and progress.
 - **React/Vite frontend** with dashboard, regulatory update, learning, scenario, assessment, results, Ask Saathi, progress, profile, and settings views.
 
-Some frontend views are still prototype/UI-first and are not all wired to live backend APIs. The `/api/circulars/` endpoint currently uses in-memory storage, so entries there are not persistent across server restarts. See [known limitations](#known-limitations).
+The public frontend is deployed and the Ask Saathi question-answering flow has been manually verified against the hosted backend. Other frontend views still require feature-by-feature acceptance testing. The `/api/circulars/` endpoint currently uses in-memory storage, so entries there are not persistent across server restarts. See [known limitations](#known-limitations).
+
+## Hosted demo
+
+- **Frontend:** [RBI Saathi](https://rbi-capstone.kalpeshw070.workers.dev)
+- **Backend API:** `https://rbi-saathi-api-993550225302.asia-south1.run.app`
+- **Interactive API documentation:** [FastAPI /docs](https://rbi-saathi-api-993550225302.asia-south1.run.app/docs)
+
+### Verified deployment checks
+
+Manual checks on 2026-10-13 confirmed:
+
+- The frontend can submit questions to the hosted API.
+- A question about the RBI (Digital Lending) Directions, 2025, returned a supported answer with citations to RBI/2025-26/36.
+- A question about unverified current KYC requirements returned `insufficient` with no citations.
+- An unrelated question about Canadian fishing-vessel regulations returned `insufficient` with no citations.
+- The API health endpoint and browser CORS preflight returned HTTP 200.
+
+These checks validate representative end-to-end behavior, not comprehensive regulatory accuracy or completion of every capstone requirement.
+
+The hosted backend currently uses OpenRouter's `openrouter/free` model router. The underlying model may vary, and free-model availability, latency, and rate limits are not guaranteed.
 
 ## Repository layout
 
